@@ -1,12 +1,8 @@
 package com.kynl.myassistant.adapter;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,9 +34,7 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         if(messageData == null) {
             return;
         }
-        holder.textView1.setText(messageData.getSender());
-        holder.textView2.setText(messageData.getSender());
-        holder.textView3.setText(messageData.getMessage());
+        holder.textViewMessage.setText(messageData.getMessage());
     }
 
     @Override
@@ -49,13 +43,11 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
     }
 
     class MessageDataViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView1, textView2, textView3;
+        private TextView textViewMessage;
 
         public MessageDataViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView1 = itemView.findViewById(R.id.textView1);
-            textView2 = itemView.findViewById(R.id.textView2);
-            textView3 = itemView.findViewById(R.id.textView3);
+            textViewMessage = itemView.findViewById(R.id.textViewMessage);
         }
     }
 }
