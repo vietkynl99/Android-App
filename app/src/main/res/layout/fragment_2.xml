@@ -95,7 +95,7 @@
                     android:textStyle="bold" />
 
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/always_active"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -106,22 +106,22 @@
                         android:id="@+id/ellipse_12"
                         android:layout_width="8dp"
                         android:layout_height="8dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="2dp"
                         android:background="@drawable/ellipse_12_shape" />
 
                     <TextView
                         android:id="@+id/always_active_ek1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
+                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="0dp"
                         android:fontFamily="DM Sans"
                         android:text="@string/always_active_ek1_string"
                         android:textColor="@color/always_active_ek1_color"
                         android:textSize="12sp" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
             </RelativeLayout>
 
