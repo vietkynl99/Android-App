@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -193,12 +194,13 @@
                     android:id="@+id/input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_rectangle">
 
 
                     <EditText
-                        android:id="@+id/editText"
+                        android:id="@+id/messageEditText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -243,52 +245,15 @@
 
                 </LinearLayout>
 
+                <ImageButton
+                    android:id="@+id/sendMessageButton"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/background_shape"
+                    app:srcCompat="@drawable/vector_ek1" />
 
-                <RelativeLayout
-                    android:id="@+id/categories_icon_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="15dp">
-
-                    <View
-                        android:id="@+id/background"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@drawable/background_shape" />
-
-
-                    <RelativeLayout
-                        android:id="@+id/icon_linear_send_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
-
-
-                        <RelativeLayout
-                            android:id="@+id/send_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="3dp"
-                            android:layout_marginTop="3dp">
-
-                            <ImageView
-                                android:id="@+id/vector_ek1"
-                                android:layout_width="18.8dp"
-                                android:layout_height="18.8dp"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginTop="0dp"
-                                android:contentDescription="vector_ek1"
-                                android:src="@drawable/vector_ek1" />
-
-                        </RelativeLayout>
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
 
             </LinearLayout>
 

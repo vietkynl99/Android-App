@@ -34,7 +34,6 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MessageDataViewHolder holder, int position) {
-        Log.e(TAG, "onBindViewHolder: ec");
         MessageData messageData = messageDataList.get(position);
         if (messageData == null) {
             return;

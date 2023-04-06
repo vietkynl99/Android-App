@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.kynl.myassistant.adapter.MessageDataAdapter;
 import com.kynl.myassistant.model.MessageData;
@@ -50,6 +53,22 @@ public class Fragment2 extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(messageDataAdapter);
+
+        ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
+        EditText messageEditText = view.findViewById(R.id.messageEditText);
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = messageEditText.getText().toString().trim();
+                if (!text.isEmpty()) {
+                    Log.e(TAG, "send message: " + text);
+                    messageDataList.add(new MessageData(true, text));
+                    messageDataAdapter.notifyItemInserted(messageDataList.size() - 1);
+                    recyclerView.smoothScrollToPosition(messageDataList.size() - 1);
+                }
+                messageEditText.getText().clear();
+            }
+        });
 
         return view;
     }
