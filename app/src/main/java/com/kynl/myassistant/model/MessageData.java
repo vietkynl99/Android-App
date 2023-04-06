@@ -1,20 +1,20 @@
 package com.kynl.myassistant.model;
 
 public class MessageData {
-    private String sender;
+    private boolean mine;
     private String message;
 
-    public MessageData(String sender, String message) {
-        this.sender = sender;
+    public MessageData(boolean mine, String message) {
+        this.mine = mine;
         this.message = message;
     }
 
-    public String getSender() {
-        return sender;
+    public boolean isMine() {
+        return mine;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setMine(boolean mine) {
+        this.mine = mine;
     }
 
     public String getMessage() {

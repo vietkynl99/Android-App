@@ -32,19 +32,16 @@ public class Fragment2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate: ");
-
         messageDataList = new ArrayList<>();
-        for (int i = 0; i < 60; i++) {
-            messageDataList.add(new MessageData("Viet Kynl", "Hello " + i));
-        }
+        messageDataList.add(new MessageData(false, "Hello!"));
+        messageDataList.add(new MessageData(false, "Good morning!"));
+        messageDataList.add(new MessageData(false, "I am your virtual assistant. May I help you?"));
+        messageDataList.add(new MessageData(true, "Hi. Nice to meet you!"));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView: ");
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_2, container, false);
         messageDataAdapter = new MessageDataAdapter(messageDataList);

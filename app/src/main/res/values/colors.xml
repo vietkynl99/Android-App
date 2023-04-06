@@ -19,6 +19,7 @@
     <color name="_9_41_color">#090A0A</color>
 
     <color name="message_background_color">#ededed</color>
+    <color name="message_background_sender_color">#AFCFFF</color>
     <color name="background_ek1_color">#F2F8FF</color>
     <color name="fitbot_ek1_color">#202325</color>
     <color name="ellipse_12_color">#7CDE86</color>
