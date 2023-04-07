@@ -38,17 +38,16 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         if (messageData == null) {
             return;
         }
-        if (messageDataList.get(position).isMine()) {
-            holder.layoutMessageMain.setPadding(0, 0, 0, 0);
-            holder.textViewMessage.setText(messageData.getMessage());
-            holder.layoutAssistantAvatar.setVisibility(View.INVISIBLE);
 
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.layoutMessagePosition.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            holder.layoutMessagePosition.setLayoutParams(params);
-            holder.layoutMessagePosition.setBackgroundResource(R.drawable.message_background_rectangle_sender);
+        holder.layoutAssistantAvatar.setVisibility(messageData.isMine() ? View.INVISIBLE : View.VISIBLE);
+        holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.INVISIBLE : View.VISIBLE);
+        holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.INVISIBLE);
+        if(messageData.isMine()) {
+            holder.textViewMyMessage.setText(messageData.getMessage());
         }
-        holder.textViewMessage.setText(messageData.getMessage());
+        else {
+            holder.textViewPartnerMessage.setText(messageData.getMessage());
+        }
     }
 
     @Override
@@ -57,17 +56,17 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
     }
 
     class MessageDataViewHolder extends RecyclerView.ViewHolder {
-        private LinearLayout layoutMessageMain;
         private FrameLayout layoutAssistantAvatar;
-        private RelativeLayout layoutMessagePosition;
-        private TextView textViewMessage;
+        private RelativeLayout layoutPartnerMessagePosition, layoutMyMessagePosition;
+        private TextView textViewPartnerMessage, textViewMyMessage;
 
         public MessageDataViewHolder(@NonNull View itemView) {
             super(itemView);
-            layoutMessageMain = itemView.findViewById(R.id.layoutMessageMain);
             layoutAssistantAvatar = itemView.findViewById(R.id.layoutAssistantAvatar);
-            layoutMessagePosition = itemView.findViewById(R.id.layoutMessagePosition);
-            textViewMessage = itemView.findViewById(R.id.textViewMessage);
+            layoutPartnerMessagePosition = itemView.findViewById(R.id.layoutPartnerMessagePosition);
+            layoutMyMessagePosition = itemView.findViewById(R.id.layoutMyMessagePosition);
+            textViewPartnerMessage = itemView.findViewById(R.id.textViewPartnerMessage);
+            textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
         }
     }
 }

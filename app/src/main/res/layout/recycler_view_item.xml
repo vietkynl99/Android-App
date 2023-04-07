@@ -7,9 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
     android:layout_marginTop="5dp"
-    android:layout_marginEnd="15dp"
-    android:paddingStart="0dp"
-    android:paddingEnd="40dp">
+    android:layout_marginEnd="15dp">
 
     <FrameLayout
         android:id="@+id/layoutAssistantAvatar"
@@ -30,21 +28,21 @@
             android:src="@drawable/vector_avatar" />
     </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/layoutMessageContent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp">
 
         <RelativeLayout
-            android:id="@+id/layoutMessagePosition"
+            android:id="@+id/layoutPartnerMessagePosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="false"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/message_background_rectangle">
 
             <TextView
-                android:id="@+id/textViewMessage"
+                android:id="@+id/textViewPartnerMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="false"
@@ -55,6 +53,26 @@
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
         </RelativeLayout>
-    </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layoutMyMessagePosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@drawable/message_background_rectangle_sender">
+
+            <TextView
+                android:id="@+id/textViewMyMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="false"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>
