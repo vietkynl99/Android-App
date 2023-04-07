@@ -42,10 +42,9 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.layoutAssistantAvatar.setVisibility(messageData.isMine() ? View.INVISIBLE : View.VISIBLE);
         holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.INVISIBLE : View.VISIBLE);
         holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.INVISIBLE);
-        if(messageData.isMine()) {
+        if (messageData.isMine()) {
             holder.textViewMyMessage.setText(messageData.getMessage());
-        }
-        else {
+        } else {
             holder.textViewPartnerMessage.setText(messageData.getMessage());
         }
     }
@@ -53,6 +52,12 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
     @Override
     public int getItemCount() {
         return (messageDataList != null) ? messageDataList.size() : 0;
+    }
+
+    public void updateItemInserted() {
+        if (messageDataList.size() > 0) {
+            notifyItemInserted(messageDataList.size() - 1);
+        }
     }
 
     class MessageDataViewHolder extends RecyclerView.ViewHolder {

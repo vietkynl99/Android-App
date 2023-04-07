@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 
 import com.kynl.myassistant.adapter.MessageDataAdapter;
 import com.kynl.myassistant.model.MessageData;
+import com.kynl.myassistant.model.MessageManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +37,8 @@ public class Fragment2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        messageDataList = new ArrayList<>();
-        messageDataList.add(new MessageData(false, "Hello!"));
-        messageDataList.add(new MessageData(false, "Good morning!"));
-        messageDataList.add(new MessageData(false, "I am your virtual assistant. May I help you?"));
-        messageDataList.add(new MessageData(true, "Hi. Nice to meet you!"));
+
+        MessageManager.getInstance().init();
     }
 
     @Override
@@ -47,6 +46,7 @@ public class Fragment2 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_2, container, false);
+        messageDataList = MessageManager.getInstance().getMessageDataList();
         messageDataAdapter = new MessageDataAdapter(messageDataList);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
@@ -61,15 +61,40 @@ public class Fragment2 extends Fragment {
             public void onClick(View v) {
                 String text = messageEditText.getText().toString().trim();
                 if (!text.isEmpty()) {
-                    Log.e(TAG, "send message: " + text);
-                    messageDataList.add(new MessageData(true, text));
-                    messageDataAdapter.notifyItemInserted(messageDataList.size() - 1);
-                    recyclerView.smoothScrollToPosition(messageDataList.size() - 1);
+                    sendMessage(text);
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            replyMessage(text);
+                        }
+                    }, 1000);
                 }
                 messageEditText.getText().clear();
             }
         });
 
         return view;
+    }
+
+    public void sendMessage(String message) {
+        Log.d(TAG, "send message: " + message);
+        MessageManager.getInstance().sendMessage(message);
+        // update to view
+        messageDataAdapter.updateItemInserted();
+        if (messageDataAdapter.getItemCount() > 0) {
+            recyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
+        }
+    }
+
+    public void replyMessage(String inputMessage) {
+        String response = "You sent: " + inputMessage;
+        MessageManager.getInstance().replyMessage(response);
+        // update to view
+        messageDataAdapter.updateItemInserted();
+        if (messageDataAdapter.getItemCount() > 0) {
+            recyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
+        }
     }
 }
