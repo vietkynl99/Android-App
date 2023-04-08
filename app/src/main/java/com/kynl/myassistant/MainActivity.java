@@ -63,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        Log.i(TAG, "onCreate: Start service");
+        Intent intent = new Intent(this, SocketService.class);
+        startService(intent);
     }
 
     @Override
@@ -75,14 +79,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-
-        if (!isMyServiceRunning(SocketService.class)) {
-            if (!isAppRunningInBackground()) {
-                Log.i(TAG, "onResume: Service isn't running. Start service!");
-                Intent intent = new Intent(this, SocketService.class);
-                startService(intent);
-            }
-        }
     }
 
     @Override
@@ -106,29 +102,4 @@ public class MainActivity extends AppCompatActivity {
         stopService(intent);
     }
 
-    public boolean isAppRunningInBackground() {
-        boolean isInBackground = true;
-        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningProcesses = activityManager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
-            if (processInfo.processName.equals(getPackageName())) {
-                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                    isInBackground = false;
-                } else {
-                    isInBackground = true;
-                }
-            }
-        }
-        return isInBackground;
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
