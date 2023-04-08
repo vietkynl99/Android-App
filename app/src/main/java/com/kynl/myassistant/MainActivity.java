@@ -2,20 +2,16 @@ package com.kynl.myassistant;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabLayout;
-import com.kynl.myassistant.adapter.MessageDataAdapter;
-import com.kynl.myassistant.model.MessageData;
+import com.kynl.myassistant.service.SocketService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +23,18 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment1, fragment2, fragment3;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        viewPager = (ViewPager2) findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
 
         tabLayout.addTab(tabLayout.newTab().setText("Dashboard"));
         tabLayout.addTab(tabLayout.newTab().setText("Assistant"));
         tabLayout.addTab(tabLayout.newTab().setText("Setting"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-//        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, getSupportFragmentManager(), tabLayout.getTabCount());
-//        viewPager.setAdapter((Adapter)viewPagerAdapter);
-//
-//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragment1 = new Fragment1();
@@ -56,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragmentList);
         viewPager.setAdapter(viewPagerAdapter);
-
-
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -75,7 +63,72 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+
+        if (!isMyServiceRunning(SocketService.class)) {
+            if (!isAppRunningInBackground()) {
+                Log.i(TAG, "onResume: Service isn't running. Start service!");
+                Intent intent = new Intent(this, SocketService.class);
+                startService(intent);
+            }
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
+
+        Intent intent = new Intent(this, SocketService.class);
+        stopService(intent);
+    }
+
+    public boolean isAppRunningInBackground() {
+        boolean isInBackground = true;
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningProcesses = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+            if (processInfo.processName.equals(getPackageName())) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    isInBackground = false;
+                } else {
+                    isInBackground = true;
+                }
+            }
+        }
+        return isInBackground;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
