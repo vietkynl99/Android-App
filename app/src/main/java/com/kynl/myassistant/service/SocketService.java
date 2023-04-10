@@ -2,10 +2,14 @@ package com.kynl.myassistant.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.kynl.myassistant.R;
 
 import java.net.URISyntaxException;
 
@@ -15,9 +19,9 @@ import io.socket.emitter.Emitter;
 
 public class SocketService extends Service {
 
-    private Socket socket;
-    private String serverAddress = "http://192.168.10.110";
     private final String TAG = "SocketService";
+    private Socket socket;
+    private String serverAddress = "http://192.168.100.198";
 
     @Override
     public void onCreate() {
@@ -42,17 +46,14 @@ public class SocketService extends Service {
                 ex.printStackTrace();
             }
         });
-        socket.on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Log.e(TAG, "Error Timeout cannot connect to socket server");
-            }
-        });
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 Log.i(TAG, "Connected to server");
+                Intent intent = new Intent(getResources().getString(R.string.SOCKET_ACTION));
+                intent.putExtra(getResources().getString(R.string.SOCKET_STATUS), 1);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         });
 
@@ -60,6 +61,9 @@ public class SocketService extends Service {
             @Override
             public void call(Object... args) {
                 Log.i(TAG, "Disconnected from server");
+                Intent intent = new Intent(getResources().getString(R.string.SOCKET_ACTION));
+                intent.putExtra(getResources().getString(R.string.SOCKET_STATUS), 0);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         });
 
@@ -67,8 +71,8 @@ public class SocketService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: Stop service" );
         super.onDestroy();
-
         socket.disconnect();
     }
 

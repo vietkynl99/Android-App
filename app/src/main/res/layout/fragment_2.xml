@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_assistant"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -104,21 +105,21 @@
                     android:layout_marginTop="22dp">
 
                     <View
-                        android:id="@+id/ellipse_12"
+                        android:id="@+id/indicatorLightStatus"
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_gravity="center"
                         android:layout_marginStart="2dp"
-                        android:background="@drawable/ellipse_12_shape" />
+                        android:background="@drawable/ellipse_12_shape_red" />
 
                     <TextView
-                        android:id="@+id/always_active_ek1"
+                        android:id="@+id/activeStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="0dp"
                         android:fontFamily="DM Sans"
-                        android:text="@string/always_active_ek1_string"
+                        android:text="@string/active_status_disconnected"
                         android:textColor="@color/always_active_ek1_color"
                         android:textSize="12sp" />
 

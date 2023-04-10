@@ -22,6 +22,7 @@
     <color name="message_background_sender_color">#AFCFFF</color>
     <color name="background_ek1_color">#F2F8FF</color>
     <color name="fitbot_ek1_color">#202325</color>
-    <color name="ellipse_12_color">#7CDE86</color>
+    <color name="ellipse_12_green">#7CDE86</color>
+    <color name="ellipse_12_red">#E91E63</color>
     <color name="always_active_ek1_color">#72777A</color>
 </resources>

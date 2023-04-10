@@ -7,5 +7,12 @@
     <string name="_9_41_string">9:41</string>
 
     <string name="fitbot_ek1_string">My Assistant</string>
-    <string name="always_active_ek1_string">Always active</string>
+    <string name="active_status_connected">Always active</string>
+    <string name="active_status_disconnected">Disconnected</string>
+
+    <string name="SOCKET_ACTION">SOCKET_ACTION</string>
+    <string name="SOCKET_STATUS">socket_status</string>
+    <string name="connected">connected</string>
+    <string name="disconnected">disconnected</string>
+    <string name="error">error</string>
 </resources>
