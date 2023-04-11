@@ -10,7 +10,7 @@
     <string name="active_status_connected">Always active</string>
     <string name="active_status_disconnected">Disconnected</string>
 
-    <string name="SOCKET_ACTION">SOCKET_ACTION</string>
+    <string name="REQ_SOCKET_STATUS">req_socket_status</string>
     <string name="SOCKET_STATUS">socket_status</string>
     <string name="connected">connected</string>
     <string name="disconnected">disconnected</string>

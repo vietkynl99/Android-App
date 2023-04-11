@@ -1,10 +1,14 @@
 package com.kynl.myassistant.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -20,15 +24,21 @@ import io.socket.emitter.Emitter;
 public class SocketService extends Service {
 
     private final String TAG = "SocketService";
+    private String serverAddress = "http://192.168.1.2";
     private Socket socket;
-    private String serverAddress = "http://192.168.100.198";
+    private boolean socketStatus = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Log.i(TAG, "onCreate: Start connect to socket server" );
+        // Register broadcast
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(socketStatusBroadcastReceiver,
+                new IntentFilter(getResources().getString(R.string.REQ_SOCKET_STATUS)));
 
+
+        // Connect to server
+        Log.i(TAG, "onCreate: Start connect to socket server");
         try {
             IO.Options options = new IO.Options();
             options.forceNew = true;
@@ -50,20 +60,18 @@ public class SocketService extends Service {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                socketStatus = true;
                 Log.i(TAG, "Connected to server");
-                Intent intent = new Intent(getResources().getString(R.string.SOCKET_ACTION));
-                intent.putExtra(getResources().getString(R.string.SOCKET_STATUS), 1);
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                sendSocketStatus();
             }
         });
 
         socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                socketStatus = false;
                 Log.i(TAG, "Disconnected from server");
-                Intent intent = new Intent(getResources().getString(R.string.SOCKET_ACTION));
-                intent.putExtra(getResources().getString(R.string.SOCKET_STATUS), 0);
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                sendSocketStatus();
             }
         });
 
@@ -71,9 +79,11 @@ public class SocketService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: Stop service" );
+        Log.i(TAG, "onDestroy: Stop service");
         super.onDestroy();
+
         socket.disconnect();
+        unregisterReceiver(socketStatusBroadcastReceiver);
     }
 
     @Nullable
@@ -81,4 +91,17 @@ public class SocketService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    private void sendSocketStatus() {
+        Intent intent = new Intent(getResources().getString(R.string.SOCKET_STATUS));
+        intent.putExtra(getResources().getString(R.string.SOCKET_STATUS), socketStatus ? 1 : 0);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    }
+
+    private BroadcastReceiver socketStatusBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            sendSocketStatus();
+        }
+    };
 }

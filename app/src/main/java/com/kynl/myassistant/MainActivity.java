@@ -3,7 +3,6 @@ package com.kynl.myassistant;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.ActivityManager;
@@ -30,32 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private Fragment fragment1, fragment2, fragment3;
 
-    private boolean socketStatus = false;
-
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int status = intent.getIntExtra(getResources().getString(R.string.SOCKET_STATUS), -1);
-            if (status >= 0) {
-                socketStatus = status == 1;
-                Log.i(TAG, "get socketStatus=" + socketStatus);
-
-                // update socketStatus to fragment2
-//                updateSocketStatusToFragment2();
-
-                if (!isFinishing()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), String.valueOf(socketStatus), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(fragment2);
         fragmentList.add(fragment3);
 
-
         // viewpager adapter
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragmentList);
         viewPager.setAdapter(viewPagerAdapter);
@@ -88,11 +60,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.i(TAG, "onTabSelected: " + tab.getPosition());
                 viewPager.setCurrentItem(tab.getPosition());
-
-                // update socketStatus to fragment2
-                if (tab.getPosition() == 1) {
-                    updateSocketStatusToFragment2();
-                }
             }
 
             @Override
@@ -104,10 +71,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // broadcast: get event form socket service
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, new IntentFilter(getResources().getString(R.string.SOCKET_ACTION)));
-
-        // Socket service
+        // Start Socket service
         Log.i(TAG, "onCreate: Start service");
         Intent intent = new Intent(this, SocketService.class);
         startService(intent);
@@ -117,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart: ");
-
-        updateSocketStatusToFragment2();
     }
 
     @Override
@@ -131,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart: ");
-//        // update socketStatus to fragment2
-//        updateSocketStatusToFragment2();
     }
 
     @Override
@@ -145,22 +105,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
+        Log.e(TAG, "onDestroy: ");
 
         // Stop service
         Intent intent = new Intent(this, SocketService.class);
         stopService(intent);
-
-        // unregister and broadcast
-        unregisterReceiver(mBroadcastReceiver);
     }
-
-    private void updateSocketStatusToFragment2() {
-        if (fragment2 != null) {
-            Bundle bundle = new Bundle();
-            bundle.putInt(getResources().getString(R.string.SOCKET_STATUS), socketStatus ? 1 : 0);
-            fragment2.setArguments(bundle);
-        }
-    }
-
 }

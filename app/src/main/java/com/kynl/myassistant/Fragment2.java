@@ -100,27 +100,28 @@ public class Fragment2 extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume: ");
 
-        // get socket status from activity
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            int status = bundle.getInt(getResources().getString(R.string.SOCKET_STATUS), -1);
-            if (status >= 0) {
-                socketStatus = status == 1;
-                Log.i(TAG, "onResume: socketStatus=" + socketStatus);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateServerStatus();
-                    }
-                });
-            }
-        }
+//        // get socket status from activity
+//        Bundle bundle = getArguments();
+//        if (bundle != null) {
+//            int status = bundle.getInt(getResources().getString(R.string.SOCKET_STATUS), -1);
+//            if (status >= 0) {
+//                socketStatus = status == 1;
+//                Log.i(TAG, "onResume: socketStatus=" + socketStatus);
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        updateServerStatus();
+//                    }
+//                });
+//            }
+//        }
 
         // register broadcast
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int status = intent.getIntExtra(getResources().getString(R.string.SOCKET_STATUS), -1);
+                Log.e(TAG, "onReceive: get SOCKET_STATUS status=" + status);
                 if (status >= 0) {
                     socketStatus = status == 1;
                     Log.i(TAG, "onResume: socketStatus=" + socketStatus);
@@ -134,7 +135,10 @@ public class Fragment2 extends Fragment {
             }
         };
         LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mBroadcastReceiver, new IntentFilter(getResources().getString(R.string.SOCKET_ACTION)));
+                .registerReceiver(mBroadcastReceiver, new IntentFilter(getResources().getString(R.string.SOCKET_STATUS)));
+
+        // send request to socket service
+        requestSocketStatusFromService();
     }
 
     @Override
@@ -162,6 +166,11 @@ public class Fragment2 extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
+    }
+
+    private void requestSocketStatusFromService() {
+        Intent intent = new Intent(getResources().getString(R.string.REQ_SOCKET_STATUS));
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     private void updateServerStatus() {
