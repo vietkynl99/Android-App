@@ -15,8 +15,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.kynl.myassistant.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -34,7 +38,7 @@ public class SocketService extends Service {
 
         // Register broadcast
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(socketStatusBroadcastReceiver,
-                new IntentFilter(getResources().getString(R.string.REQ_SOCKET_STATUS)));
+                new IntentFilter(getResources().getString(R.string.SOCKET_REQ)));
 
 
         // Connect to server
@@ -75,11 +79,30 @@ public class SocketService extends Service {
             }
         });
 
+        socket.on("MD_message_res", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e(TAG, "call: [MD_message_res]" + args.length);
+                if (args.length > 0) {
+                    JSONObject data = (JSONObject) args[0];
+//                    Log.e(TAG, "call: data->" + data.toString());
+                    try {
+                        String message = data.getString("message");
+                        sendMessageToUI(message);
+                        Log.e(TAG, "call: message->" + message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
+
     }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: Stop service");
+        Log.e(TAG, "onDestroy: Stop service");
         super.onDestroy();
 
         socket.disconnect();
@@ -93,15 +116,53 @@ public class SocketService extends Service {
     }
 
     private void sendSocketStatus() {
-        Intent intent = new Intent(getResources().getString(R.string.SOCKET_STATUS));
-        intent.putExtra(getResources().getString(R.string.SOCKET_STATUS), socketStatus ? 1 : 0);
+        Intent intent = new Intent(getResources().getString(R.string.SOCKET_DATA));
+        intent.putExtra("event", "status");
+        intent.putExtra("status", socketStatus ? 1 : 0);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    }
+
+    private void sendMessageToUI(String message) {
+        Intent intent = new Intent(getResources().getString(R.string.SOCKET_DATA));
+        intent.putExtra("event", "message");
+        intent.putExtra("message", message);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    }
+
+    private void sendToServer(String message) {
+        if (socket != null) {
+            if (socketStatus) {
+                Log.e(TAG, "sendToServer: [MD_message] [" + message + "]");
+                socket.emit("MD_message", message, new Ack() {
+                    @Override
+                    public void call(Object... args) {
+                        Log.e(TAG, "call: ..............");
+                    }
+                });
+            } else {
+                Log.e(TAG, "sendToServer: server is disconnected. Cannot send message!");
+            }
+        }
     }
 
     private BroadcastReceiver socketStatusBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            sendSocketStatus();
+            String event = intent.getStringExtra("event");
+            if (event != null) {
+                switch (event) {
+                    case "req_status":
+                        sendSocketStatus();
+                        break;
+                    case "send_mess":
+                        String message = intent.getStringExtra("message");
+                        if (message != null) {
+                            sendToServer(message);
+                        }
+                    default:
+                        break;
+                }
+            }
         }
     };
 }

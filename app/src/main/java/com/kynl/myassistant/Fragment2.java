@@ -79,14 +79,6 @@ public class Fragment2 extends Fragment {
                 String text = messageEditText.getText().toString().trim();
                 if (!text.isEmpty()) {
                     sendMessage(text);
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            replyMessage(text);
-                        }
-                    }, 1000);
                 }
                 messageEditText.getText().clear();
             }
@@ -100,42 +92,46 @@ public class Fragment2 extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume: ");
 
-//        // get socket status from activity
-//        Bundle bundle = getArguments();
-//        if (bundle != null) {
-//            int status = bundle.getInt(getResources().getString(R.string.SOCKET_STATUS), -1);
-//            if (status >= 0) {
-//                socketStatus = status == 1;
-//                Log.i(TAG, "onResume: socketStatus=" + socketStatus);
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        updateServerStatus();
-//                    }
-//                });
-//            }
-//        }
-
         // register broadcast
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int status = intent.getIntExtra(getResources().getString(R.string.SOCKET_STATUS), -1);
-                Log.e(TAG, "onReceive: get SOCKET_STATUS status=" + status);
-                if (status >= 0) {
-                    socketStatus = status == 1;
-                    Log.i(TAG, "onResume: socketStatus=" + socketStatus);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateServerStatus();
-                        }
-                    });
+                String event = intent.getStringExtra("event");
+                if (event != null) {
+                    switch (event) {
+                        case "status":
+                            int status = intent.getIntExtra("status", -1);
+                            if (status >= 0) {
+                                Log.e(TAG, "onReceive: get socket status=" + status);
+                                socketStatus = status == 1;
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        updateServerStatus();
+                                    }
+                                });
+                            }
+                            break;
+                        case "message":
+                            String message = intent.getStringExtra("message");
+                            if(message != null) {
+                                Log.e(TAG, "onReceive: get message from server: " + message );
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        replyMessage(message);
+                                    }
+                                });
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         };
         LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mBroadcastReceiver, new IntentFilter(getResources().getString(R.string.SOCKET_STATUS)));
+                .registerReceiver(mBroadcastReceiver, new IntentFilter(getResources().getString(R.string.SOCKET_DATA)));
 
         // send request to socket service
         requestSocketStatusFromService();
@@ -157,8 +153,7 @@ public class Fragment2 extends Fragment {
     public void onPause() {
         Log.d(TAG, "onPause: ");
         // unregister broadcast
-        LocalBroadcastManager.getInstance(getActivity())
-                .unregisterReceiver(mBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
         super.onPause();
     }
 
@@ -169,7 +164,15 @@ public class Fragment2 extends Fragment {
     }
 
     private void requestSocketStatusFromService() {
-        Intent intent = new Intent(getResources().getString(R.string.REQ_SOCKET_STATUS));
+        Intent intent = new Intent(getResources().getString(R.string.SOCKET_REQ));
+        intent.putExtra("event", "req_status");
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    }
+
+    private void sendMessageToServer(String message) {
+        Intent intent = new Intent(getResources().getString(R.string.SOCKET_REQ));
+        intent.putExtra("event", "send_mess");
+        intent.putExtra("message", message);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
@@ -190,11 +193,14 @@ public class Fragment2 extends Fragment {
         if (messageDataAdapter.getItemCount() > 0) {
             recyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
         }
+        // send message to server
+        if (socketStatus) {
+            sendMessageToServer(message);
+        }
     }
 
-    public void replyMessage(String inputMessage) {
-        String response = "You sent: " + inputMessage;
-        MessageManager.getInstance().replyMessage(response);
+    public void replyMessage(String message) {
+        MessageManager.getInstance().replyMessage(message);
         // update to view
         messageDataAdapter.updateItemInserted();
         if (messageDataAdapter.getItemCount() > 0) {
