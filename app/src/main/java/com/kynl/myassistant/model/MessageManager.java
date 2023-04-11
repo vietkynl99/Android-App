@@ -21,11 +21,11 @@ public class MessageManager {
     }
 
     public void reply(String message) {
-        messageDataList.add(new MessageData(false, message));
+        messageDataList.add(new MessageData(false, false, message));
     }
 
-    private void send(String message) {
-        messageDataList.add(new MessageData(true, message));
+    private void send(boolean error, String message) {
+        messageDataList.add(new MessageData(true, error, message));
     }
 
     public void init() {
@@ -42,7 +42,7 @@ public class MessageManager {
         reply(message);
     }
 
-    public void sendMessage(String message) {
-        send(message);
+    public void sendMessage(boolean error, String message) {
+        send(error, message);
     }
 }

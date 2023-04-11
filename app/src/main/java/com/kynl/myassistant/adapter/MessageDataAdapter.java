@@ -1,5 +1,6 @@
 package com.kynl.myassistant.adapter;
 
+import android.content.res.ColorStateList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +40,13 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             return;
         }
 
-        holder.layoutAssistantAvatar.setVisibility(messageData.isMine() ? View.INVISIBLE : View.VISIBLE);
-        holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.INVISIBLE : View.VISIBLE);
-        holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.INVISIBLE);
+        holder.layoutAssistantAvatar.setVisibility(messageData.isMine() ? View.GONE : View.VISIBLE);
+        holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.GONE : View.VISIBLE);
+        holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.GONE);
+        holder.layoutMyMessageError.setVisibility(messageData.isError() ? View.VISIBLE : View.GONE);
+        if (messageData.isError()) {
+            holder.layoutMyMessageShape.setBackgroundResource(R.drawable.message_background_rectangle_error);
+        }
         if (messageData.isMine()) {
             holder.textViewMyMessage.setText(messageData.getMessage());
         } else {
@@ -62,7 +67,8 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
 
     class MessageDataViewHolder extends RecyclerView.ViewHolder {
         private FrameLayout layoutAssistantAvatar;
-        private RelativeLayout layoutPartnerMessagePosition, layoutMyMessagePosition;
+        private RelativeLayout layoutPartnerMessagePosition;
+        private LinearLayout layoutMyMessagePosition, layoutMyMessageError, layoutMyMessageShape;
         private TextView textViewPartnerMessage, textViewMyMessage;
 
         public MessageDataViewHolder(@NonNull View itemView) {
@@ -70,6 +76,8 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             layoutAssistantAvatar = itemView.findViewById(R.id.layoutAssistantAvatar);
             layoutPartnerMessagePosition = itemView.findViewById(R.id.layoutPartnerMessagePosition);
             layoutMyMessagePosition = itemView.findViewById(R.id.layoutMyMessagePosition);
+            layoutMyMessageError = itemView.findViewById(R.id.layoutMyMessageError);
+            layoutMyMessageShape = itemView.findViewById(R.id.layoutMyMessageShape);
             textViewPartnerMessage = itemView.findViewById(R.id.textViewPartnerMessage);
             textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
         }

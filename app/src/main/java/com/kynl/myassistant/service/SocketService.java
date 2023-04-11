@@ -106,7 +106,10 @@ public class SocketService extends Service {
         super.onDestroy();
 
         socket.disconnect();
-        unregisterReceiver(socketStatusBroadcastReceiver);
+        try {
+            unregisterReceiver(socketStatusBroadcastReceiver);
+        } catch (Exception e) {
+        }
     }
 
     @Nullable

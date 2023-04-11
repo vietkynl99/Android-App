@@ -12,7 +12,5 @@
 
     <string name="SOCKET_REQ">socket_req</string>
     <string name="SOCKET_DATA">socket_data</string>
-    <string name="connected">connected</string>
-    <string name="disconnected">disconnected</string>
-    <string name="error">error</string>
+    <string name="send_message_error">Server is disconnected. Try again.</string>
 </resources>

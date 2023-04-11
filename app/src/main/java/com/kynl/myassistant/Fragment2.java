@@ -114,8 +114,8 @@ public class Fragment2 extends Fragment {
                             break;
                         case "message":
                             String message = intent.getStringExtra("message");
-                            if(message != null) {
-                                Log.e(TAG, "onReceive: get message from server: " + message );
+                            if (message != null) {
+                                Log.e(TAG, "onReceive: get message from server: " + message);
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -187,7 +187,7 @@ public class Fragment2 extends Fragment {
 
     public void sendMessage(String message) {
         Log.d(TAG, "send message: " + message);
-        MessageManager.getInstance().sendMessage(message);
+        MessageManager.getInstance().sendMessage(!socketStatus, message);
         // update to view
         messageDataAdapter.updateItemInserted();
         if (messageDataAdapter.getItemCount() > 0) {
