@@ -213,6 +213,7 @@
                         android:ems="10"
                         android:fontFamily="DM Sans"
                         android:gravity="start|top"
+                        android:hint="@string/type_a_message____string"
                         android:inputType="textMultiLine"
                         android:textSize="14sp" />
 
