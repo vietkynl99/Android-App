@@ -9,7 +9,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:background="@drawable/nav_bubble_chat"
+        android:elevation="4dp">
 
         <LinearLayout
             android:id="@+id/top_nav_bar"
