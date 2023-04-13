@@ -1,23 +1,14 @@
 package com.kynl.myassistant;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.kynl.myassistant.service.SocketService;
 
 import java.util.ArrayList;
@@ -27,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
-    private Fragment fragment1, fragment2, fragment3;
+    private Fragment fragmentHome, fragmentAssistant, fragmentSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        fragment1 = new Fragment1();
-        fragment2 = new Fragment2();
-        fragment3 = new Fragment3();
-        fragmentList.add(fragment1);
-        fragmentList.add(fragment2);
-        fragmentList.add(fragment3);
+        fragmentHome = new FragmentHome();
+        fragmentAssistant = new FragmentAssistant();
+        fragmentSettings = new FragmentSettings();
+        fragmentList.add(fragmentHome);
+        fragmentList.add(fragmentAssistant);
+        fragmentList.add(fragmentSettings);
 
         // viewpager adapter
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragmentList);
