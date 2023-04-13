@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
+import com.kynl.myassistant.adapter.ViewPagerAdapter;
+import com.kynl.myassistant.fragment.FragmentAssistant;
+import com.kynl.myassistant.fragment.FragmentHome;
+import com.kynl.myassistant.fragment.FragmentSettings;
 import com.kynl.myassistant.service.SocketService;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.kynl.myassistant;
+package com.kynl.myassistant.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
 import com.kynl.myassistant.model.MessageData;
 import com.kynl.myassistant.model.MessageManager;

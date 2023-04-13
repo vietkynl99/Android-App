@@ -1,4 +1,4 @@
-package com.kynl.myassistant;
+package com.kynl.myassistant.adapter;
 
 import android.content.Context;
 
