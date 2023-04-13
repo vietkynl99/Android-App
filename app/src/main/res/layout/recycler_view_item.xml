@@ -14,18 +14,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/view"
+        <androidx.cardview.widget.CardView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/background_ek2_shape" />
+            app:cardCornerRadius="20dp"
+            app:cardElevation="1dp">
 
-        <ImageView
-            android:id="@+id/imageViewAvatar"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:src="@drawable/vector_avatar" />
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/chatbot_avatar" />
+
+        </androidx.cardview.widget.CardView>
+
     </FrameLayout>
 
     <FrameLayout

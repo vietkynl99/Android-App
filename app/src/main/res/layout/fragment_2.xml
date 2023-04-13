@@ -29,6 +29,7 @@
                 android:baselineAligned="false"
                 android:paddingStart="24dp"
                 android:paddingTop="10dp"
+                android:paddingEnd="0dp"
                 android:paddingBottom="10dp">
 
 
@@ -42,40 +43,26 @@
                     android:contentDescription="@string/content_description"
                     android:src="@drawable/vector_back" />
 
-                <FrameLayout
-                    android:id="@+id/avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="0dp">
-
-                    <View
-                        android:id="@+id/background_ek1"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@drawable/background_ek1_shape" />
-
+                    app:cardCornerRadius="100dp"
+                    app:cardElevation="1dp">
 
                     <ImageView
-                        android:id="@+id/chatbot_avatar"
-                        android:layout_width="22.08dp"
-                        android:layout_height="21.12dp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="0.96dp"
-                        android:layout_marginTop="1.44dp"
-                        android:contentDescription="@string/content_description"
-                        android:src="@drawable/vector_avatar" />
-
-                </FrameLayout>
+                        android:id="@+id/imageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/chatbot_avatar" />
+                </androidx.cardview.widget.CardView>
 
                 <RelativeLayout
                     android:id="@+id/name___activity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1">
 
@@ -126,7 +113,7 @@
                     android:layout_height="4dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="30dp"
                     android:contentDescription="@string/content_description"
                     android:src="@drawable/vector_more" />
 
