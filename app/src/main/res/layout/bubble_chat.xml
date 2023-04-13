@@ -24,21 +24,28 @@
             android:paddingEnd="24dp">
 
 
-            <ImageView
-                android:id="@+id/vector_back"
-                android:layout_width="18dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
-                android:contentDescription="@string/content_description"
-                android:src="@drawable/vector_back" />
+            <FrameLayout
+                android:id="@+id/bubbleChatBack"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:foregroundGravity="center">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:contentDescription="@string/content_description"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/vector_back" />
+            </FrameLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 app:cardCornerRadius="100dp"
                 app:cardElevation="1dp">
 

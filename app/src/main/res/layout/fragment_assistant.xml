@@ -23,7 +23,7 @@
 
 
             <ImageView
-                android:id="@+id/vector_back"
+                android:id="@+id/bubbleChatBack"
                 android:layout_width="18dp"
                 android:layout_height="12dp"
                 android:layout_gravity="center"

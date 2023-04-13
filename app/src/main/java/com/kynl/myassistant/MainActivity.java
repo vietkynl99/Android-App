@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.kynl.myassistant.adapter.ViewPagerAdapter;
@@ -74,8 +75,18 @@ public class MainActivity extends AppCompatActivity {
         assistantIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "onClick: ............" );
                 bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE );
+            }
+        });
+
+        FrameLayout bubbleChatBack = findViewById(R.id.bubbleChatBack);
+        bubbleChatBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "onClick: back" );
+                if(bubbleChatLayout.getVisibility() == View.VISIBLE) {
+                    bubbleChatLayout.setVisibility(View.GONE);
+                }
             }
         });
 
