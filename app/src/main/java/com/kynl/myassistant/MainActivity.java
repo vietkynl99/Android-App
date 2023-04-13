@@ -1,12 +1,15 @@
 package com.kynl.myassistant;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.google.android.material.tabs.TabLayout;
 import com.kynl.myassistant.adapter.ViewPagerAdapter;
@@ -63,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        FrameLayout bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
+        CardView assistantIconView = findViewById(R.id.assistantIconView);
+        assistantIconView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "onClick: ............" );
+                bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE );
             }
         });
 
