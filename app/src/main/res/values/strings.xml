@@ -13,4 +13,7 @@
     <string name="SOCKET_REQ">socket_req</string>
     <string name="SOCKET_DATA">socket_data</string>
     <string name="send_message_error">Server is disconnected. Try again.</string>
+
+    <string name="menu_setting">Settings</string>
+    <string name="txt_edit_profile">Edit Profile</string>
 </resources>

@@ -12,6 +12,9 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="primary">#3F51B5</color>
+    <color name="secondary">#009688</color>
+
     <color name="_bg__screen_3_color">#FFFFFF</color>
     <color name="type_a_message_color">#72777A</color>
     <color name="background_color">#303437</color>
