@@ -16,9 +16,11 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-    <color name="primary">#3F51B5</color>
-    <color name="secondary">#03BCAA</color>
+<!--    <color name="primary">#3F51B5</color>-->
+<!--    <color name="secondary">#03BCAA</color>-->
     <color name="tertiary">#7F59C3</color>
+    <color name="primary">#2B5876</color>
+    <color name="secondary">#4E4376</color>
 
     <color name="_bg__screen_3_color">#FFFFFF</color>
     <color name="type_a_message_color">#72777A</color>

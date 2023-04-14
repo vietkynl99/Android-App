@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_gradient_background"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -14,18 +15,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="#D4E1E0"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="20dp">
+            android:paddingStart="15dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="15dp">
+
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:srcCompat="@drawable/setting_white_48" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Dashboard"
-                android:textColor="@color/text_dark_color"
+                android:layout_marginStart="10dp"
+                android:text="@string/setting_dashboard"
+                android:textColor="@color/text_light_color"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -34,7 +40,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#F1BCBC"
             android:orientation="vertical">
 
             <com.google.android.material.tabs.TabLayout
@@ -58,7 +63,7 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:visibility="invisible"
-        tools:visibility="visible">
+        tools:visibility="invisible">
 
         <View
             android:id="@+id/view"
@@ -78,9 +83,9 @@
             android:clipToPadding="true"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/bubble_chat"
-                layout="@layout/bubble_chat"
+            <fragment
+                android:id="@+id/my_fragment"
+                android:name="com.kynl.myassistant.fragment.FragmentAssistant"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>

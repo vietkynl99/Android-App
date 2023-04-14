@@ -28,7 +28,7 @@ import io.socket.emitter.Emitter;
 public class SocketService extends Service {
 
     private final String TAG = "SocketService";
-    private String serverAddress = "http://192.168.1.2";
+    private String serverAddress = "http://192.168.100.198";
     private Socket socket;
     private boolean socketStatus = false;
 

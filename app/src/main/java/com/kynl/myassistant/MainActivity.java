@@ -79,16 +79,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FrameLayout bubbleChatBack = findViewById(R.id.bubbleChatBack);
-        bubbleChatBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "onClick: back" );
-                if(bubbleChatLayout.getVisibility() == View.VISIBLE) {
-                    bubbleChatLayout.setVisibility(View.GONE);
-                }
-            }
-        });
+//        FrameLayout bubbleChatBack = findViewById(R.id.bubbleChatBack);
+//        bubbleChatBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.e(TAG, "onClick: back" );
+//                if(bubbleChatLayout.getVisibility() == View.VISIBLE) {
+//                    bubbleChatLayout.setVisibility(View.GONE);
+//                }
+//            }
+//        });
 
         // Start Socket service
         Log.i(TAG, "onCreate: Start service");
