@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Start Socket service
+        Log.i(TAG, "onCreate: Start service");
+        Intent intent = new Intent(this, SocketService.class);
+        startService(intent);
+
         // Tab layout & view pager
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
@@ -90,10 +95,17 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        // Start Socket service
-        Log.i(TAG, "onCreate: Start service");
-        Intent intent = new Intent(this, SocketService.class);
-        startService(intent);
+        // go to setting
+        FrameLayout settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Settings.class);
+//                intent.putExtra("key", "data");
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
