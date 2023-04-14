@@ -1,32 +1,37 @@
 package com.kynl.myassistant;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
-import com.kynl.myassistant.adapter.ViewPagerAdapter;
-import com.kynl.myassistant.fragment.FragmentAssistant;
+import com.kynl.myassistant.fragment.FanFragment;
 import com.kynl.myassistant.fragment.FragmentHome;
-import com.kynl.myassistant.fragment.FragmentSettings;
+import com.kynl.myassistant.fragment.LightFragment;
+import com.kynl.myassistant.fragment.MediaFragment;
+import com.kynl.myassistant.fragment.PumpFragment;
+import com.kynl.myassistant.fragment.TemperatureFragment;
 import com.kynl.myassistant.service.SocketService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    FragmentManager fragmentManager;
     private Fragment fragmentHome, fragmentAssistant, fragmentSettings;
+    private int fragment_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,62 +43,45 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SocketService.class);
         startService(intent);
 
-        // Tab layout & view pager
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
-
-        tabLayout.addTab(tabLayout.newTab().setText("Dashboard"));
-        tabLayout.addTab(tabLayout.newTab().setText("Assistant"));
-        tabLayout.addTab(tabLayout.newTab().setText("Setting"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentHome = new FragmentHome();
-        fragmentAssistant = new FragmentAssistant();
-        fragmentSettings = new FragmentSettings();
-        fragmentList.add(fragmentHome);
-        fragmentList.add(fragmentAssistant);
-        fragmentList.add(fragmentSettings);
-
-        // viewpager adapter
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragmentList);
-        viewPager.setAdapter(viewPagerAdapter);
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        // Bottom navigation menu
+        fragmentManager = getSupportFragmentManager();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_menu);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Log.i(TAG, "onTabSelected: " + tab.getPosition());
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_menu_light:
+                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
+                        break;
+                    case R.id.nav_menu_temperature:
+                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new TemperatureFragment()).commit();
+                        break;
+                    case R.id.nav_menu_fan:
+                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new FanFragment()).commit();
+                        break;
+                    case R.id.nav_menu_pump:
+                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new PumpFragment()).commit();
+                        break;
+                    case R.id.nav_menu_media:
+                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new MediaFragment()).commit();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
+        fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
 
+        // Bubble chat
         FrameLayout bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
         CardView assistantIconView = findViewById(R.id.assistantIconView);
         assistantIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE );
+                bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         });
-
-//        FrameLayout bubbleChatBack = findViewById(R.id.bubbleChatBack);
-//        bubbleChatBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e(TAG, "onClick: back" );
-//                if(bubbleChatLayout.getVisibility() == View.VISIBLE) {
-//                    bubbleChatLayout.setVisibility(View.GONE);
-//                }
-//            }
-//        });
 
         // go to setting
         FrameLayout settingsButton = findViewById(R.id.settingsButton);

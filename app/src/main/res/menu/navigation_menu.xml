@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_menu_light"
+        android:icon="@drawable/light_on_w_80"
+        android:title="@string/menu_light" />
+    <item
+        android:id="@+id/nav_menu_temperature"
+        android:icon="@drawable/thermometer_w_48"
+        android:title="@string/menu_temperature" />
+    <item
+        android:id="@+id/nav_menu_fan"
+        android:icon="@drawable/fan_w_50"
+        android:title="@string/menu_fan" />
+    <item
+        android:id="@+id/nav_menu_pump"
+        android:icon="@drawable/pump_w_50"
+        android:title="@string/menu_pump" />
+    <item
+        android:id="@+id/nav_menu_media"
+        android:icon="@drawable/media_64"
+        android:title="@string/menu_media" />
+
+</menu>

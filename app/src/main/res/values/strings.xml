@@ -19,4 +19,10 @@
     <string name="setting_menu">Settings</string>
     <string name="setting_edit_profile">Edit Profile</string>
     <string name="setting_night_mode">Night mode</string>
+
+    <string name="menu_light">Light</string>
+    <string name="menu_temperature">Temperature</string>
+    <string name="menu_fan">Fan</string>
+    <string name="menu_pump">Pump</string>
+    <string name="menu_media">Media</string>
 </resources>
