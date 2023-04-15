@@ -25,4 +25,7 @@
     <string name="menu_fan">Fan</string>
     <string name="menu_pump">Pump</string>
     <string name="menu_media">Media</string>
+
+    <string name="text_on">ON</string>
+    <string name="text_off">OFF</string>
 </resources>

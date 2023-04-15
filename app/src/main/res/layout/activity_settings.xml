@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/screen_background"
+    android:background="@drawable/main_gradient_background"
     android:orientation="vertical"
     tools:context=".fragment.FragmentHome">
 
-    <androidx.cardview.widget.CardView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:cardElevation="4dp">
+        android:layout_height="60dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -30,7 +29,8 @@
                     android:layout_height="12dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/content_description"
-                    android:src="@drawable/vector_back" />
+                    android:src="@drawable/vector_back"
+                    android:tint="#FFFFFF" />
             </FrameLayout>
 
             <TextView
@@ -40,11 +40,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/setting_menu"
-                android:textColor="@color/text_dark_color"
+                android:textColor="@color/text_light_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </FrameLayout>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center_horizontal"
                     android:text="Viet Kynl"
-                    android:textColor="@color/text_dark_color"
+                    android:textColor="@color/text_light_color"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -94,6 +94,7 @@
                     android:layout_marginTop="5dp"
                     android:gravity="center_horizontal"
                     android:text="vietkynl@gmail.com"
+                    android:textColor="@color/gray"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -104,7 +105,8 @@
                     android:background="@drawable/button_background"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:text="@string/setting_edit_profile" />
+                    android:text="@string/setting_edit_profile"
+                    android:textColor="@color/text_light_color" />
 
             </LinearLayout>
 
@@ -141,7 +143,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="@string/setting_night_mode"
-                        android:textColor="@color/text_dark_color" />
+                        android:textColor="@color/text_light_color" />
 
                     <Switch
                         android:layout_width="wrap_content"
@@ -171,7 +173,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Notification"
-                        android:textColor="@color/text_dark_color" />
+                        android:textColor="@color/text_light_color" />
 
                     <Switch
                         android:layout_width="wrap_content"
@@ -201,7 +203,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Auto Connect"
-                        android:textColor="@color/text_dark_color" />
+                        android:textColor="@color/text_light_color" />
 
                     <Switch
                         android:layout_width="wrap_content"
@@ -246,7 +248,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Server Address"
-                        android:textColor="@color/text_dark_color" />
+                        android:textColor="@color/text_light_color" />
 
                     <ImageButton
                         android:id="@+id/imageButton"
@@ -254,7 +256,8 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/next_arrow" />
+                        android:src="@drawable/next_arrow"
+                        android:tint="@color/text_light_color" />
 
                 </LinearLayout>
 
@@ -279,14 +282,15 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Text Size"
-                        android:textColor="@color/text_dark_color" />
+                        android:textColor="@color/text_light_color" />
 
                     <ImageButton
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/next_arrow" />
+                        android:src="@drawable/next_arrow"
+                        android:tint="@color/text_light_color" />
 
                 </LinearLayout>
 
@@ -311,14 +315,15 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Privacy"
-                        android:textColor="@color/text_dark_color" />
+                        android:textColor="@color/text_light_color" />
 
                     <ImageButton
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/next_arrow" />
+                        android:src="@drawable/next_arrow"
+                        android:tint="@color/text_light_color" />
 
                 </LinearLayout>
             </LinearLayout>

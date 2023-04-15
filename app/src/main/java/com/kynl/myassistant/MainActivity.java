@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     FragmentManager fragmentManager;
     private Fragment fragmentHome, fragmentAssistant, fragmentSettings;
-    private int fragment_index;
+    private int pre_fragment_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (pre_fragment_id == item.getItemId()) {
+                    return true;
+                }
+                pre_fragment_id = item.getItemId();
                 switch (item.getItemId()) {
                     case R.id.nav_menu_light:
                         fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        pre_fragment_id = R.id.nav_menu_light;
         fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
 
         // Bubble chat

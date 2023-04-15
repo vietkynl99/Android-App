@@ -11,17 +11,16 @@
 
     <color name="screen_background">#FFFFFFFF</color>
 
-    <color name="setting_item_background">#f1f2f6</color>
+    <color name="button_background">#4C4D63</color>
+    <color name="setting_item_background">#4C4D63</color>
 
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-<!--    <color name="primary">#3F51B5</color>-->
-<!--    <color name="secondary">#03BCAA</color>-->
-    <color name="tertiary">#7F59C3</color>
-    <color name="primary">#2B5876</color>
+    <color name="primary">#202128</color>
     <color name="secondary">#4E4376</color>
+    <color name="tertiary">#7F59C3</color>
 
     <color name="_bg__screen_3_color">#FFFFFF</color>
     <color name="type_a_message_color">#72777A</color>

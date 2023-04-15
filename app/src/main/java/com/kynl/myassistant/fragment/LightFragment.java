@@ -7,14 +7,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.kynl.myassistant.R;
+import com.kynl.myassistant.adapter.GridViewAdapter;
+import com.kynl.myassistant.model.Device;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LightFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class LightFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -25,6 +27,9 @@ public class LightFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private List<Device> deviceList;
+
 
     public LightFragment() {
         // Required empty public constructor
@@ -55,12 +60,26 @@ public class LightFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        // list
+        deviceList = new ArrayList<>();
+        deviceList.add(new Device(1, Device.Type.LIGHT, "Light 1", Device.State.ON));
+        deviceList.add(new Device(2, Device.Type.LIGHT, "Light 2", Device.State.ON));
+        deviceList.add(new Device(3, Device.Type.LIGHT, "Light 3", Device.State.ON));
+        deviceList.add(new Device(4, Device.Type.LIGHT, "Light 4", Device.State.ON));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_light, container, false);
+        View view = inflater.inflate(R.layout.fragment_light, container, false);
+
+        // gridView
+        GridViewAdapter gridViewAdapter = new GridViewAdapter(getContext(), deviceList);
+        GridView gridView = view.findViewById(R.id.gridView);
+        gridView.setAdapter(gridViewAdapter);
+
+        return view;
     }
 }
