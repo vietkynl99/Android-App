@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         assistantIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         });
@@ -94,8 +96,12 @@ public class MainActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Settings.class);
-                startActivity(intent);
+                if (bubbleChatLayout.getVisibility() != View.VISIBLE) {
+                    Intent intent = new Intent(MainActivity.this, Settings.class);
+                    startActivity(intent);
+                } else {
+                    hideKeyboard();
+                }
             }
         });
 
@@ -151,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             if (imm.isAcceptingText()) {
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                View focusView = getCurrentFocus();
+                if (focusView != null) {
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                }
             }
         }
     }

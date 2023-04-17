@@ -187,7 +187,10 @@ public class FragmentAssistant extends Fragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             if (imm.isAcceptingText()) {
-                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                View focusView = getActivity().getCurrentFocus();
+                if (focusView != null) {
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                }
             }
         }
     }
