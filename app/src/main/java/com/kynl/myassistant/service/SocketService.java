@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -28,13 +29,17 @@ import io.socket.emitter.Emitter;
 public class SocketService extends Service {
 
     private final String TAG = "SocketService";
-    private String serverAddress = "http://192.168.100.198";
+    private String serverAddressDefault = "http://192.168.100.198";
+    private String serverAddress;
     private Socket socket;
     private boolean socketStatus = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Read old settings
+        readOldSetting();
 
         // Register broadcast
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(socketStatusBroadcastReceiver,
@@ -168,4 +173,22 @@ public class SocketService extends Service {
             }
         }
     };
+
+    private void readOldSetting() {
+        SharedPreferences prefs = getSharedPreferences("SOCKET", Context.MODE_PRIVATE);
+
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putString("myKey", "myValue");
+//        editor.apply();
+
+        String address = prefs.getString("serverAddress", null);
+        if (address != null) {
+            Log.e(TAG, "readOldSetting: server address " + address);
+            serverAddress = address;
+        } else {
+            Log.e(TAG, "readOldSetting: Cannot read server address from old setting. Set default address " + serverAddressDefault);
+            serverAddress = serverAddressDefault;
+        }
+    }
+
 }
