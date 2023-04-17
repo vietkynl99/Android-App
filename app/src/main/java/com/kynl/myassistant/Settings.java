@@ -2,11 +2,18 @@ package com.kynl.myassistant;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -19,11 +26,15 @@ import android.widget.TextView;
 import java.util.Set;
 
 public class Settings extends AppCompatActivity {
+    private final String TAG = "Settings";
+    private String serverAddress = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        readOldSetting();
 
         // back button
         FrameLayout backButton = findViewById(R.id.backButton);
@@ -45,14 +56,28 @@ public class Settings extends AppCompatActivity {
         });
     }
 
+    private void readOldSetting() {
+        SharedPreferences prefs = getSharedPreferences("SOCKET", Context.MODE_PRIVATE);
+        String address = prefs.getString("serverAddress", null);
+        if (address != null) {
+            serverAddress = address;
+        } else {
+            serverAddress = "";
+        }
+    }
+
     private void showDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
 
-        final EditText input = new EditText(getApplicationContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("Enter your text here");
+        final EditText editText = new EditText(getApplicationContext());
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        if (serverAddress.isEmpty()) {
+            editText.setHint("Enter your text here");
+        } else {
+            editText.setText(serverAddress);
+        }
 
-        builder.setView(input);
+        builder.setView(editText);
 
         if (title != null) {
             builder.setTitle(title);
@@ -69,6 +94,14 @@ public class Settings extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String text = editText.getText().toString().trim();
+                Log.e(TAG, "onClick: text" + text);
+                if (!text.isEmpty()) {
+                    Intent intent = new Intent(getResources().getString(R.string.SOCKET_REQ));
+                    intent.putExtra("event", "change_address");
+                    intent.putExtra("address", text);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                }
                 dialog.cancel();
             }
         });

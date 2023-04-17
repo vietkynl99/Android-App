@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Settings.class);
-//                intent.putExtra("key", "data");
                 startActivity(intent);
             }
         });
