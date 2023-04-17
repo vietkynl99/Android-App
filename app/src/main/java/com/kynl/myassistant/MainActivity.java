@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.TableLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -44,6 +45,29 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: Start service");
         Intent intent = new Intent(this, SocketService.class);
         startService(intent);
+
+        // tabLayout
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                tab.view.setSelected(true);
+                Log.e(TAG, "onTabSelected: position" + position );
+            }
+
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+//                tab.view.setSelected(false);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         // Bottom navigation menu
         fragmentManager = getSupportFragmentManager();
