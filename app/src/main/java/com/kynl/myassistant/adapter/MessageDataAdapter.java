@@ -59,12 +59,22 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.dateTimeText.setText(messageData.getDateTimeString());
         holder.dateTimeText.setVisibility(visibility ? View.VISIBLE : View.GONE);
 
-        holder.setItemClickListener(new ItemClickListener() {
+//        holder.setItemClickListener(new ItemClickListener() {
+//            @Override
+//            public void onClick(View view, int position, boolean isLongClick) {
+//            }
+//        });
+
+        holder.layoutPartnerMessagePosition.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view, int position, boolean isLongClick) {
-                if (!isLongClick) {
-                    holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                }
+            public void onClick(View v) {
+                holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            }
+        });
+        holder.layoutMyMessageShape.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         });
     }
@@ -80,8 +90,9 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         }
     }
 
-    class MessageDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        private ItemClickListener itemClickListener;
+    //    class MessageDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class MessageDataViewHolder extends RecyclerView.ViewHolder {
+//        private ItemClickListener itemClickListener;
         private FrameLayout layoutAssistantAvatar;
         private RelativeLayout layoutPartnerMessagePosition;
         private LinearLayout layoutMyMessagePosition, layoutMyMessageError, layoutMyMessageShape;
@@ -98,23 +109,23 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
             dateTimeText = itemView.findViewById(R.id.dateTimeText);
 
-            itemView.setOnLongClickListener(this);
-            itemView.setOnClickListener(this);
+//            itemView.setOnLongClickListener(this);
+//            itemView.setOnClickListener(this);
         }
 
-        public void setItemClickListener(ItemClickListener itemClickListener) {
-            this.itemClickListener = itemClickListener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            itemClickListener.onClick(v, getAdapterPosition(), false);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            itemClickListener.onClick(v, getAdapterPosition(), true);
-            return true;
-        }
+//        public void setItemClickListener(ItemClickListener itemClickListener) {
+//            this.itemClickListener = itemClickListener;
+//        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            itemClickListener.onClick(v, getAdapterPosition(), false);
+//        }
+//
+//        @Override
+//        public boolean onLongClick(View v) {
+//            itemClickListener.onClick(v, getAdapterPosition(), true);
+//            return true;
+//        }
     }
 }
