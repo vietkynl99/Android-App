@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,10 +31,7 @@ import com.kynl.myassistant.service.SocketService;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
-    FragmentManager fragmentManager;
-    private Fragment fragmentHome, fragmentAssistant, fragmentSettings;
+    private FragmentManager fragmentManager;
     private int pre_fragment_id;
 
     @Override
@@ -98,6 +99,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // hide keyboard
+        ViewGroup mainLayout = findViewById(R.id.mainLayout);
+        mainLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideKeyboard();
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -133,5 +145,14 @@ public class MainActivity extends AppCompatActivity {
         // Stop service
         Intent intent = new Intent(this, SocketService.class);
         stopService(intent);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            if (imm.isAcceptingText()) {
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.kynl.myassistant.adapter;
 
-import android.content.res.ColorStateList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +51,12 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         } else {
             holder.textViewPartnerMessage.setText(messageData.getMessage());
         }
+
+//        holder.setItemClickListener(new ItemClickListener() {
+//            @Override
+//            public void onClick(View view, int position, boolean isLongClick) {
+//            }
+//        });
     }
 
     @Override
@@ -65,7 +70,8 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         }
     }
 
-    class MessageDataViewHolder extends RecyclerView.ViewHolder {
+    class MessageDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        private ItemClickListener itemClickListener;
         private FrameLayout layoutAssistantAvatar;
         private RelativeLayout layoutPartnerMessagePosition;
         private LinearLayout layoutMyMessagePosition, layoutMyMessageError, layoutMyMessageShape;
@@ -80,6 +86,25 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             layoutMyMessageShape = itemView.findViewById(R.id.layoutMyMessageShape);
             textViewPartnerMessage = itemView.findViewById(R.id.textViewPartnerMessage);
             textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
+
+            itemView.setOnLongClickListener(this);
+            itemView.setOnClickListener(this);
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener)
+        {
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onClick(v,getAdapterPosition(),false);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            itemClickListener.onClick(v,getAdapterPosition(),true);
+            return true;
         }
     }
 }

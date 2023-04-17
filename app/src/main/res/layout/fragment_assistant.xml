@@ -9,6 +9,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/navBar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/nav_bubble_chat"
@@ -113,7 +114,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/message_area"
+        android:id="@+id/messageArea"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
@@ -124,6 +125,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
             android:scrollbars="vertical"
             tools:listitem="@layout/recycler_view_item" />
     </LinearLayout>
@@ -131,7 +134,9 @@
     <RelativeLayout
         android:id="@+id/send_a_message_prompt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="bottom">
 
 
         <LinearLayout
