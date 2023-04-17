@@ -43,20 +43,18 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.GONE : View.VISIBLE);
         holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.GONE);
         holder.layoutMyMessageError.setVisibility(messageData.isError() ? View.VISIBLE : View.GONE);
-        if (messageData.isError()) {
-            holder.layoutMyMessageShape.setBackgroundResource(R.drawable.message_background_rectangle_error);
-        }
+        holder.layoutMyMessageShape.setBackgroundResource(messageData.isError() ? R.drawable.message_background_rectangle_error : R.drawable.message_background_rectangle_sender);
         if (messageData.isMine()) {
             holder.textViewMyMessage.setText(messageData.getMessage());
         } else {
             holder.textViewPartnerMessage.setText(messageData.getMessage());
         }
 
-//        holder.setItemClickListener(new ItemClickListener() {
-//            @Override
-//            public void onClick(View view, int position, boolean isLongClick) {
-//            }
-//        });
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position, boolean isLongClick) {
+            }
+        });
     }
 
     @Override
@@ -91,19 +89,18 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             itemView.setOnClickListener(this);
         }
 
-        public void setItemClickListener(ItemClickListener itemClickListener)
-        {
+        public void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
         }
 
         @Override
         public void onClick(View v) {
-            itemClickListener.onClick(v,getAdapterPosition(),false);
+            itemClickListener.onClick(v, getAdapterPosition(), false);
         }
 
         @Override
         public boolean onLongClick(View v) {
-            itemClickListener.onClick(v,getAdapterPosition(),true);
+            itemClickListener.onClick(v, getAdapterPosition(), true);
             return true;
         }
     }
