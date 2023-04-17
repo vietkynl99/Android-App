@@ -34,7 +34,7 @@ import com.kynl.myassistant.service.SocketService;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private FragmentManager fragmentManager;
-    private int pre_fragment_id;
+    private int pre_fragment_index = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,62 +47,24 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
 
         // tabLayout
+        fragmentManager = getSupportFragmentManager();
         TabLayout tabLayout = findViewById(R.id.tabLayout);
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                tab.view.setSelected(true);
-                Log.e(TAG, "onTabSelected: position" + position );
+                changeFragment(position);
             }
-
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-//                tab.view.setSelected(false);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
-
-        // Bottom navigation menu
-        fragmentManager = getSupportFragmentManager();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_menu);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (pre_fragment_id == item.getItemId()) {
-                    return true;
-                }
-                pre_fragment_id = item.getItemId();
-                switch (item.getItemId()) {
-                    case R.id.nav_menu_light:
-                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
-                        break;
-                    case R.id.nav_menu_temperature:
-                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new TemperatureFragment()).commit();
-                        break;
-                    case R.id.nav_menu_fan:
-                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new FanFragment()).commit();
-                        break;
-                    case R.id.nav_menu_pump:
-                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new PumpFragment()).commit();
-                        break;
-                    case R.id.nav_menu_media:
-                        fragmentManager.beginTransaction().replace(R.id.fragment_content, new MediaFragment()).commit();
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-        pre_fragment_id = R.id.nav_menu_light;
-        fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
+        changeFragment(0);
 
         // Bubble chat
         FrameLayout bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
@@ -175,6 +137,31 @@ public class MainActivity extends AppCompatActivity {
         // Stop service
         Intent intent = new Intent(this, SocketService.class);
         stopService(intent);
+    }
+
+    private void changeFragment(int index) {
+        if(pre_fragment_index != index) {
+            switch (index) {
+                case 0:
+                    fragmentManager.beginTransaction().replace(R.id.fragment_content, new LightFragment()).commit();
+                    break;
+                case 1:
+                    fragmentManager.beginTransaction().replace(R.id.fragment_content, new TemperatureFragment()).commit();
+                    break;
+                case 2:
+                    fragmentManager.beginTransaction().replace(R.id.fragment_content, new FanFragment()).commit();
+                    break;
+                case 3:
+                    fragmentManager.beginTransaction().replace(R.id.fragment_content, new PumpFragment()).commit();
+                    break;
+                case 4:
+                    fragmentManager.beginTransaction().replace(R.id.fragment_content, new MediaFragment()).commit();
+                    break;
+                default:
+                    return;
+            }
+            pre_fragment_index = index;
+        }
     }
 
     private void hideKeyboard() {

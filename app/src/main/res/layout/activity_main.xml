@@ -137,14 +137,15 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/text_light_color"
-            app:tabIconTint="@color/tab_icon_tint_selector">
+            android:layout_marginTop="10dp"
+            app:tabIconTint="@color/tab_icon_tint_selector"
+            app:tabTextColor="@color/text_light_color">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:icon="@drawable/light_on_w_80"
-                android:text="Light"/>
+                android:text="Light" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -171,30 +172,11 @@
                 android:text="Media" />
         </com.google.android.material.tabs.TabLayout>
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/fragment_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/navigation_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:itemBackground="@color/primary"
-                app:itemIconTint="@color/navigation_menu"
-                app:itemTextColor="@color/text_light_color"
-                app:menu="@menu/navigation_menu" />
-
-            <FrameLayout
-                android:id="@+id/fragment_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </FrameLayout>
-
-        </LinearLayout>
+            android:layout_height="match_parent">
+        </FrameLayout>
 
     </LinearLayout>
 
