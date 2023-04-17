@@ -139,6 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             app:tabIconTint="@color/tab_icon_tint_selector"
+            app:tabMode="scrollable"
             app:tabTextColor="@color/text_light_color">
 
             <com.google.android.material.tabs.TabItem

@@ -3,6 +3,7 @@ package com.kynl.myassistant.model;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MessageManager {
@@ -20,14 +21,6 @@ public class MessageManager {
         return instance;
     }
 
-    public void reply(String message) {
-        messageDataList.add(new MessageData(false, false, message));
-    }
-
-    private void send(boolean error, String message) {
-        messageDataList.add(new MessageData(true, error, message));
-    }
-
     public void init() {
         messageDataList = new ArrayList<>();
         replyMessage("Hello!");
@@ -39,10 +32,10 @@ public class MessageManager {
     }
 
     public void replyMessage(String message) {
-        reply(message);
+        messageDataList.add(new MessageData(false, false, message, new Date()));
     }
 
     public void sendMessage(boolean error, String message) {
-        send(error, message);
+        messageDataList.add(new MessageData(true, error, message, new Date()));
     }
 }
