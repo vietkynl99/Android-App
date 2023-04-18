@@ -27,6 +27,14 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class SocketService extends Service {
+    public static final String SOCKET_PREFERENCES = "socket_preferences";
+//    from another module to socket service
+    public static final String SOCKET_ACTION_REQ = "socket_action_req";
+    public static final String SOCKET_REQ_STATUS = "socket_req_status";
+    public static final String SOCKET_REQ_SEND_MESS = "socket_req_send_mess";
+    public static final String SOCKET_REQ_CHANGE_ADDRESS = "socket_req_change_address";
+//    from socket service to another module
+    public static final String SOCKET_ACTION_DATA = "socket_action_data";
 
     private final String TAG = "SocketService";
     private String serverAddressDefault = "http://192.168.100.198";
@@ -43,7 +51,7 @@ public class SocketService extends Service {
 
         // Register broadcast
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(socketStatusBroadcastReceiver,
-                new IntentFilter(getResources().getString(R.string.SOCKET_REQ)));
+                new IntentFilter(SOCKET_ACTION_REQ));
 
 
         // Connect to server
@@ -69,7 +77,7 @@ public class SocketService extends Service {
     }
 
     private void sendSocketStatus() {
-        Intent intent = new Intent(getResources().getString(R.string.SOCKET_DATA));
+        Intent intent = new Intent(SocketService.SOCKET_ACTION_DATA);
         intent.putExtra("event", "status");
         intent.putExtra("status", socketStatus ? 1 : 0);
         intent.putExtra("address", serverAddress);
@@ -77,7 +85,7 @@ public class SocketService extends Service {
     }
 
     private void sendMessageToUI(String message) {
-        Intent intent = new Intent(getResources().getString(R.string.SOCKET_DATA));
+        Intent intent = new Intent(SocketService.SOCKET_ACTION_DATA);
         intent.putExtra("event", "message");
         intent.putExtra("message", message);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
@@ -87,12 +95,7 @@ public class SocketService extends Service {
         if (socket != null) {
             if (socketStatus) {
                 Log.e(TAG, "sendToServer: [MD_message] [" + message + "]");
-                socket.emit("MD_message", message, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        Log.e(TAG, "call: ..............");
-                    }
-                });
+                socket.emit("MD_message", message);
             } else {
                 Log.e(TAG, "sendToServer: server is disconnected. Cannot send message!");
             }
@@ -105,16 +108,16 @@ public class SocketService extends Service {
             String event = intent.getStringExtra("event");
             if (event != null) {
                 switch (event) {
-                    case "req_status":
+                    case SOCKET_REQ_STATUS:
                         sendSocketStatus();
                         break;
-                    case "send_mess":
+                    case SOCKET_REQ_SEND_MESS:
                         String message = intent.getStringExtra("message");
                         if (message != null) {
                             sendToServer(message);
                         }
                         break;
-                    case "change_address":
+                    case SOCKET_REQ_CHANGE_ADDRESS:
                         String address = intent.getStringExtra("address");
                         if (address != null) {
                             address = address.trim();
@@ -203,14 +206,14 @@ public class SocketService extends Service {
 
     private void saveOldSetting() {
         // server address
-        SharedPreferences prefs = getSharedPreferences("SOCKET", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(SOCKET_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("serverAddress", serverAddress);
         editor.apply();
     }
 
     private void readOldSetting() {
-        SharedPreferences prefs = getSharedPreferences("SOCKET", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(SOCKET_PREFERENCES, Context.MODE_PRIVATE);
 
         String address = prefs.getString("serverAddress", null);
         if (address != null) {

@@ -23,6 +23,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kynl.myassistant.service.SocketService;
+
 import java.util.Set;
 
 public class Settings extends AppCompatActivity {
@@ -58,7 +60,7 @@ public class Settings extends AppCompatActivity {
     }
 
     private void readOldSetting() {
-        SharedPreferences prefs = getSharedPreferences("SOCKET", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(SocketService.SOCKET_PREFERENCES, Context.MODE_PRIVATE);
         String address = prefs.getString("serverAddress", null);
         if (address != null) {
             serverAddress = address;
@@ -98,8 +100,8 @@ public class Settings extends AppCompatActivity {
                 String text = editText.getText().toString().trim();
                 Log.e(TAG, "onClick: text" + text);
                 if (!text.isEmpty()) {
-                    Intent intent = new Intent(getResources().getString(R.string.SOCKET_REQ));
-                    intent.putExtra("event", "change_address");
+                    Intent intent = new Intent(SocketService.SOCKET_ACTION_REQ);
+                    intent.putExtra("event", SocketService.SOCKET_REQ_CHANGE_ADDRESS);
                     intent.putExtra("address", text);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                 }

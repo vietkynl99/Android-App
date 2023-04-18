@@ -10,8 +10,6 @@
     <string name="active_status_connected">Always active</string>
     <string name="active_status_disconnected">Disconnected</string>
 
-    <string name="SOCKET_REQ">socket_req</string>
-    <string name="SOCKET_DATA">socket_data</string>
     <string name="send_message_error">Server is disconnected. Try again.</string>
 
     <string name="setting_dashboard">Dashboard</string>
