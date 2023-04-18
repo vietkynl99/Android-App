@@ -28,12 +28,13 @@ import io.socket.emitter.Emitter;
 
 public class SocketService extends Service {
     public static final String SOCKET_PREFERENCES = "socket_preferences";
-//    from another module to socket service
+    //    from another module to socket service
     public static final String SOCKET_ACTION_REQ = "socket_action_req";
     public static final String SOCKET_REQ_STATUS = "socket_req_status";
     public static final String SOCKET_REQ_SEND_MESS = "socket_req_send_mess";
     public static final String SOCKET_REQ_CHANGE_ADDRESS = "socket_req_change_address";
-//    from socket service to another module
+    public static final String SOCKET_REQ_UPDATE_DEVICE = "socket_req_update_device";
+    //    from socket service to another module
     public static final String SOCKET_ACTION_DATA = "socket_action_data";
 
     private final String TAG = "SocketService";
@@ -52,7 +53,6 @@ public class SocketService extends Service {
         // Register broadcast
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(socketStatusBroadcastReceiver,
                 new IntentFilter(SOCKET_ACTION_REQ));
-
 
         // Connect to server
         connectToSocketSever();
@@ -102,6 +102,17 @@ public class SocketService extends Service {
         }
     }
 
+    private void updateDataToServer(String data) {
+        if (socket != null) {
+            if (socketStatus) {
+                Log.e(TAG, "sendToServer: [MD_data] [" + data + "]");
+                socket.emit("MD_data", data);
+            } else {
+                Log.e(TAG, "sendToServer: server is disconnected. Cannot send message!");
+            }
+        }
+    }
+
     private BroadcastReceiver socketStatusBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -126,6 +137,16 @@ public class SocketService extends Service {
                                 serverAddress = address;
                                 saveOldSetting();
                                 connectToSocketSever();
+                            }
+                        }
+                        break;
+                    case SOCKET_REQ_UPDATE_DEVICE:
+                        String type = intent.getStringExtra("type");
+                        if (type == "switch") {
+                            String name = intent.getStringExtra("name");
+                            int status = intent.getIntExtra("status", -1);
+                            if (name != null && status >= 0) {
+                                updateDataToServer(type + ";" + name + ";" + status);
                             }
                         }
                         break;

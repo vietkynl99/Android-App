@@ -1,14 +1,20 @@
 package com.kynl.myassistant.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.model.Device;
+import com.kynl.myassistant.service.SocketService;
 
 import java.util.List;
 
@@ -45,6 +51,18 @@ public class GridViewAdapter extends BaseAdapter {
         deviceName.setText(deviceList.get(position).getName());
         Switch deviceStatus = view.findViewById(R.id.deviceStatus);
         deviceStatus.setChecked(deviceList.get(position).getStatus() == Device.State.ON);
+        deviceStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.e("onCheckedChanged", "onCheckedChanged: " + deviceList.get(position).getName()  + " " + isChecked );
+                Intent intent = new Intent(SocketService.SOCKET_ACTION_REQ);
+                intent.putExtra("event", SocketService.SOCKET_REQ_UPDATE_DEVICE);
+                intent.putExtra("name", deviceList.get(position).getName());
+                intent.putExtra("type", "switch");
+                intent.putExtra("status", isChecked ? 1 : 0);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
         return view;
     }
 }
