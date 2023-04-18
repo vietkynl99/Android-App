@@ -1,6 +1,9 @@
 package com.kynl.myassistant.model;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MessageData {
@@ -10,6 +13,8 @@ public class MessageData {
     private Date dateTime;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+    SimpleDateFormat todayDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat today12hDateFormat = new SimpleDateFormat("hh:mm a");
 
     public MessageData(boolean mine, boolean error, String message, Date dateTime) {
         this.mine = mine;
@@ -23,7 +28,13 @@ public class MessageData {
     }
 
     public String getDateTimeString() {
-        return dateFormat.format(dateTime);
+        Date today = new Date();
+        // check if its today
+        if (todayDateFormat.format(dateTime).equals(todayDateFormat.format(today))) {
+            return today12hDateFormat.format(dateTime);
+        } else {
+            return dateFormat.format(dateTime);
+        }
     }
 
     public void setDateTime(Date dateTime) {
