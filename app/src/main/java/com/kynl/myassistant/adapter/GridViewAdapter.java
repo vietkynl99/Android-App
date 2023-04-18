@@ -18,6 +18,9 @@ import com.kynl.myassistant.service.SocketService;
 
 import java.util.List;
 
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
+
 public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private List<Device> deviceList;
@@ -55,8 +58,8 @@ public class GridViewAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.e("onCheckedChanged", "onCheckedChanged: " + deviceList.get(position).getName()  + " " + isChecked );
-                Intent intent = new Intent(SocketService.SOCKET_ACTION_REQ);
-                intent.putExtra("event", SocketService.SOCKET_REQ_UPDATE_DEVICE);
+                Intent intent = new Intent(SOCKET_ACTION_REQ);
+                intent.putExtra("event", SOCKET_REQ_UPDATE_DEVICE);
                 intent.putExtra("name", deviceList.get(position).getName());
                 intent.putExtra("type", "switch");
                 intent.putExtra("status", isChecked ? 1 : 0);

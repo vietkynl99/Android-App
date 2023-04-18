@@ -31,6 +31,11 @@ import com.kynl.myassistant.service.SocketService;
 
 import java.util.List;
 
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_DATA;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_SEND_MESS;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
+
 public class FragmentAssistant extends Fragment {
 
     private static final String TAG = "Fragment2";
@@ -161,7 +166,7 @@ public class FragmentAssistant extends Fragment {
             }
         };
         LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mBroadcastReceiver, new IntentFilter(SocketService.SOCKET_ACTION_DATA));
+                .registerReceiver(mBroadcastReceiver, new IntentFilter(SOCKET_ACTION_DATA));
 
         // send request to socket service
         requestSocketStatusFromService();
@@ -221,14 +226,14 @@ public class FragmentAssistant extends Fragment {
     }
 
     private void requestSocketStatusFromService() {
-        Intent intent = new Intent(SocketService.SOCKET_ACTION_REQ);
-        intent.putExtra("event", SocketService.SOCKET_REQ_STATUS);
+        Intent intent = new Intent(SOCKET_ACTION_REQ);
+        intent.putExtra("event", SOCKET_REQ_STATUS);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     private void sendMessageToServer(String message) {
-        Intent intent = new Intent(SocketService.SOCKET_ACTION_REQ);
-        intent.putExtra("event", SocketService.SOCKET_REQ_SEND_MESS);
+        Intent intent = new Intent(SOCKET_ACTION_REQ);
+        intent.putExtra("event", SOCKET_REQ_SEND_MESS);
         intent.putExtra("message", message);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }

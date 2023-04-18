@@ -27,6 +27,10 @@ import com.kynl.myassistant.service.SocketService;
 
 import java.util.Set;
 
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_CHANGE_ADDRESS;
+
 public class Settings extends AppCompatActivity {
     private final String TAG = "Settings";
     private String serverAddress = "";
@@ -60,7 +64,7 @@ public class Settings extends AppCompatActivity {
     }
 
     private void readOldSetting() {
-        SharedPreferences prefs = getSharedPreferences(SocketService.SOCKET_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(SOCKET_PREFERENCES, Context.MODE_PRIVATE);
         String address = prefs.getString("serverAddress", null);
         if (address != null) {
             serverAddress = address;
@@ -100,8 +104,8 @@ public class Settings extends AppCompatActivity {
                 String text = editText.getText().toString().trim();
                 Log.e(TAG, "onClick: text" + text);
                 if (!text.isEmpty()) {
-                    Intent intent = new Intent(SocketService.SOCKET_ACTION_REQ);
-                    intent.putExtra("event", SocketService.SOCKET_REQ_CHANGE_ADDRESS);
+                    Intent intent = new Intent(SOCKET_ACTION_REQ);
+                    intent.putExtra("event", SOCKET_REQ_CHANGE_ADDRESS);
                     intent.putExtra("address", text);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                 }

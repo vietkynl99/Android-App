@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.kynl.myassistant.R;
+import com.kynl.myassistant.common.CommonUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,17 +27,16 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class SocketService extends Service {
-    public static final String SOCKET_PREFERENCES = "socket_preferences";
-    //    from another module to socket service
-    public static final String SOCKET_ACTION_REQ = "socket_action_req";
-    public static final String SOCKET_REQ_STATUS = "socket_req_status";
-    public static final String SOCKET_REQ_SEND_MESS = "socket_req_send_mess";
-    public static final String SOCKET_REQ_CHANGE_ADDRESS = "socket_req_change_address";
-    public static final String SOCKET_REQ_UPDATE_DEVICE = "socket_req_update_device";
-    //    from socket service to another module
-    public static final String SOCKET_ACTION_DATA = "socket_action_data";
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_DATA;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_CHANGE_ADDRESS;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_SEND_MESS;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
 
+
+public class SocketService extends Service {
     private final String TAG = "SocketService";
     private String serverAddressDefault = "http://192.168.100.198";
     private String serverAddress = "";
@@ -77,7 +77,7 @@ public class SocketService extends Service {
     }
 
     private void sendSocketStatus() {
-        Intent intent = new Intent(SocketService.SOCKET_ACTION_DATA);
+        Intent intent = new Intent(SOCKET_ACTION_DATA);
         intent.putExtra("event", "status");
         intent.putExtra("status", socketStatus ? 1 : 0);
         intent.putExtra("address", serverAddress);
@@ -85,7 +85,7 @@ public class SocketService extends Service {
     }
 
     private void sendMessageToUI(String message) {
-        Intent intent = new Intent(SocketService.SOCKET_ACTION_DATA);
+        Intent intent = new Intent(SOCKET_ACTION_DATA);
         intent.putExtra("event", "message");
         intent.putExtra("message", message);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
