@@ -20,16 +20,18 @@ import java.util.List;
 public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAdapter.MessageDataViewHolder> {
     private final String TAG = "SuggestionDataAdapter";
     private List<String> suggestionDataList;
+    private OnSubItemClickListener onSubItemClickListener;
 
-    public SuggestionDataAdapter(List<String> suggestionDataList) {
+    public SuggestionDataAdapter(List<String> suggestionDataList, OnSubItemClickListener onSubItemClickListener) {
         this.suggestionDataList = suggestionDataList;
+        this.onSubItemClickListener = onSubItemClickListener;
     }
 
     @NonNull
     @Override
     public MessageDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.suggestion_recycler_view_item, parent, false);
-        return new MessageDataViewHolder(view);
+        return new MessageDataViewHolder(view, onSubItemClickListener);
     }
 
     @Override
@@ -38,7 +40,7 @@ public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAd
         holder.suggestionText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onSubItemClickListener.onSubItemClick(position, suggestionDataList.get(position));
             }
         });
     }
@@ -55,10 +57,12 @@ public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAd
     }
 
     class MessageDataViewHolder extends RecyclerView.ViewHolder {
+        private OnSubItemClickListener onSubItemClickListener;
         private TextView suggestionText;
 
-        public MessageDataViewHolder(@NonNull View itemView) {
+        public MessageDataViewHolder(@NonNull View itemView, OnSubItemClickListener onSubItemClickListener) {
             super(itemView);
+            this.onSubItemClickListener = onSubItemClickListener;
             suggestionText = itemView.findViewById(R.id.suggestionText);
         }
     }

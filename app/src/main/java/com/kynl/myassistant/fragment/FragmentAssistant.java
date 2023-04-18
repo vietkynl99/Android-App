@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
+import com.kynl.myassistant.adapter.OnSubItemClickListener;
 import com.kynl.myassistant.adapter.SuggestionDataAdapter;
 import com.kynl.myassistant.model.MessageData;
 import com.kynl.myassistant.model.MessageManager;
@@ -79,10 +80,16 @@ public class FragmentAssistant extends Fragment {
 
         // suggestion message recyclerview
         suggestionRecyclerView = view.findViewById(R.id.suggestionRecyclerView);
-        suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList());
+        suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList(), new OnSubItemClickListener() {
+            @Override
+            public void onSubItemClick(int position, String text) {
+                Log.e(TAG, "onSubItemClick: " + position + " " + text);
+            }
+        });
         suggestionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         suggestionRecyclerView.setAdapter(suggestionDataAdapter);
         suggestionArea = view.findViewById(R.id.suggestionArea);
+        showMessageSuggestion();
 
         // edit text and send button
         ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
