@@ -47,63 +47,7 @@ public class SocketService extends Service {
 
 
         // Connect to server
-        if (serverAddress != null && !serverAddress.isEmpty()) {
-            Log.i(TAG, "onCreate: Start connect to socket server " + serverAddress);
-            try {
-                IO.Options options = new IO.Options();
-                options.forceNew = true;
-                socket = IO.socket(serverAddress, options);
-                socket.connect();
-            } catch (Exception e) {
-                Log.e(TAG, "onReceive: Cannot connect to " + serverAddress + " : " + e.getCause());
-            }
-        }
-
-        socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Exception e = (Exception) args[0];
-//                e.printStackTrace();
-                Log.e(TAG, "Error cannot connect to  server " + serverAddress + " : " + e.getCause());
-            }
-        });
-
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                socketStatus = true;
-                Log.i(TAG, "Connected to server");
-                sendSocketStatus();
-            }
-        });
-
-        socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                socketStatus = false;
-                Log.i(TAG, "Disconnected from server");
-                sendSocketStatus();
-            }
-        });
-
-        socket.on("MD_message_res", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Log.e(TAG, "call: [MD_message_res]" + args.length);
-                if (args.length > 0) {
-                    JSONObject data = (JSONObject) args[0];
-                    try {
-                        String message = data.getString("message");
-                        sendMessageToUI(message);
-                        Log.e(TAG, "call: message->" + message);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "call: MD_message_res error : " + e.getCause());
-                    }
-
-                }
-            }
-        });
-
+        connectToSocketSever();
     }
 
     @Override
@@ -177,17 +121,8 @@ public class SocketService extends Service {
                             if (!address.isEmpty() && address != serverAddress) {
                                 Log.i(TAG, "onReceive: Change server address to" + address);
                                 serverAddress = address;
-
-                                Log.i(TAG, "onCreate: Start connect to socket server " + serverAddress);
-                                try {
-                                    IO.Options options = new IO.Options();
-                                    options.forceNew = true;
-                                    socket = IO.socket(serverAddress, options);
-                                    socket.connect();
-                                    saveOldSetting();
-                                } catch (Exception e) {
-                                    Log.e(TAG, "onReceive: Cannot connect to " + serverAddress + " : " + e.getCause());
-                                }
+                                saveOldSetting();
+                                connectToSocketSever();
                             }
                         }
                         break;
@@ -197,6 +132,74 @@ public class SocketService extends Service {
             }
         }
     };
+
+    private void connectToSocketSever() {
+        if (serverAddress != null && !serverAddress.isEmpty()) {
+            Log.i(TAG, "connectToSocketSever: request connect to " + serverAddress);
+            if (socket != null) {
+                if (socket.connected()) {
+                    Log.i(TAG, "connectToSocketSever: Socket is still connected. Disconnect to old server! ");
+                    socket.disconnect();
+                }
+            }
+            Log.i(TAG, "connectToSocketSever: Start connect to socket server " + serverAddress);
+            try {
+                IO.Options options = new IO.Options();
+                options.forceNew = true;
+                socket = IO.socket(serverAddress, options);
+                socket.connect();
+            } catch (Exception e) {
+                Log.e(TAG, "connectToSocketSever: Cannot connect to " + serverAddress + " : " + e.getCause());
+            }
+
+            socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Exception e = (Exception) args[0];
+//                e.printStackTrace();
+                    Log.e(TAG, "EVENT_CONNECT_ERROR Error cannot connect to  server " + serverAddress + " : " + e.getCause());
+                    socketStatus = false;
+                    sendSocketStatus();
+                }
+            });
+
+            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    socketStatus = true;
+                    Log.i(TAG, "EVENT_CONNECT Connected to server");
+                    sendSocketStatus();
+                }
+            });
+
+            socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.i(TAG, "EVENT_DISCONNECT Disconnected from server");
+                    socketStatus = false;
+                    sendSocketStatus();
+                }
+            });
+
+            socket.on("MD_message_res", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.e(TAG, "call: [MD_message_res]" + args.length);
+                    if (args.length > 0) {
+                        JSONObject data = (JSONObject) args[0];
+                        try {
+                            String message = data.getString("message");
+                            sendMessageToUI(message);
+                            Log.e(TAG, "call: message->" + message);
+                        } catch (JSONException e) {
+                            Log.e(TAG, "call: MD_message_res error : " + e.getCause());
+                        }
+
+                    }
+                }
+            });
+        }
+    }
 
     private void saveOldSetting() {
         // server address
@@ -216,6 +219,7 @@ public class SocketService extends Service {
         } else {
             Log.e(TAG, "readOldSetting: Cannot read server address from old setting. Set default address " + serverAddressDefault);
             serverAddress = serverAddressDefault;
+            saveOldSetting();
         }
     }
 

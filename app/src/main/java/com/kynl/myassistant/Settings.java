@@ -51,6 +51,7 @@ public class Settings extends AppCompatActivity {
         serverAddressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                readOldSetting();
                 showDialog("Server address", "");
             }
         });
