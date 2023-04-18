@@ -1,6 +1,5 @@
 package com.kynl.myassistant.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
     @NonNull
     @Override
     public MessageDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_recycler_view_item, parent, false);
         return new MessageDataViewHolder(view);
     }
 

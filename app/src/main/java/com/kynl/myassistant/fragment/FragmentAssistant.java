@@ -18,13 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
+import com.kynl.myassistant.adapter.SuggestionDataAdapter;
 import com.kynl.myassistant.model.MessageData;
 import com.kynl.myassistant.model.MessageManager;
 import com.kynl.myassistant.service.SocketService;
@@ -34,9 +33,9 @@ import java.util.List;
 public class FragmentAssistant extends Fragment {
 
     private static final String TAG = "Fragment2";
-    private RecyclerView recyclerView;
+    private RecyclerView messageRecyclerView, suggestionRecyclerView;
     private MessageDataAdapter messageDataAdapter;
-    private List<MessageData> messageDataList;
+    private SuggestionDataAdapter suggestionDataAdapter;
     private boolean socketStatus = false;
 
     private BroadcastReceiver mBroadcastReceiver;
@@ -61,17 +60,23 @@ public class FragmentAssistant extends Fragment {
         Log.d(TAG, "onCreateView: ");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assistant, container, false);
-        messageDataList = MessageManager.getInstance().getMessageDataList();
-        messageDataAdapter = new MessageDataAdapter(messageDataList);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         indicatorLightStatus = view.findViewById(R.id.indicatorLightStatus);
         activeStatus = view.findViewById(R.id.activeStatus);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(messageDataAdapter);
+        // message recyclerview
+        messageRecyclerView = view.findViewById(R.id.messageRecyclerView);
+        messageDataAdapter = new MessageDataAdapter(MessageManager.getInstance().getMessageDataList());
+        messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        messageRecyclerView.setAdapter(messageDataAdapter);
 
+        // suggestion message recyclerview
+        suggestionRecyclerView = view.findViewById(R.id.suggestionRecyclerView);
+        suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList());
+        suggestionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        suggestionRecyclerView.setAdapter(suggestionDataAdapter);
+
+        // edit text and send button
         ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
         EditText messageEditText = view.findViewById(R.id.messageEditText);
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +101,7 @@ public class FragmentAssistant extends Fragment {
                 return false;
             }
         });
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+        messageRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -224,7 +229,7 @@ public class FragmentAssistant extends Fragment {
         // update to view
         messageDataAdapter.updateItemInserted();
         if (messageDataAdapter.getItemCount() > 0) {
-            recyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
+            messageRecyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
         }
         // send message to server
         if (socketStatus) {
@@ -237,7 +242,7 @@ public class FragmentAssistant extends Fragment {
         // update to view
         messageDataAdapter.updateItemInserted();
         if (messageDataAdapter.getItemCount() > 0) {
-            recyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
+            messageRecyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
         }
     }
 }

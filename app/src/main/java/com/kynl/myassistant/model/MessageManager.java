@@ -9,7 +9,7 @@ import java.util.List;
 public class MessageManager {
     private static MessageManager instance;
     private List<MessageData> messageDataList;
-    private MessageDataAdapter messageDataAdapter;
+    private List<String> suggestionDataList;
 
     private MessageManager() {
     }
@@ -25,10 +25,21 @@ public class MessageManager {
         messageDataList = new ArrayList<>();
         replyMessage("Hello!");
         replyMessage("I am your virtual assistant. May I help you?");
+
+        suggestionDataList = new ArrayList<>();
+        suggestionDataList.add("Suggestion 1");
+        suggestionDataList.add("Suggestion 2");
+        suggestionDataList.add("Suggestion 3");
+        suggestionDataList.add("Suggestion 4");
+        suggestionDataList.add("Suggestion 5");
     }
 
     public List<MessageData> getMessageDataList() {
         return messageDataList;
+    }
+
+    public List<String> getSuggestionDataList() {
+        return suggestionDataList;
     }
 
     public void replyMessage(String message) {
