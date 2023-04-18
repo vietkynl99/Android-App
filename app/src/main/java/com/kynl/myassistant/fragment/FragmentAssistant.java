@@ -49,6 +49,7 @@ public class FragmentAssistant extends Fragment {
     private BroadcastReceiver mBroadcastReceiver;
     private View indicatorLightStatus;
     private TextView activeStatus;
+    private EditText messageEditText;
 
     public FragmentAssistant() {
     }
@@ -83,17 +84,17 @@ public class FragmentAssistant extends Fragment {
         suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList(), new OnSubItemClickListener() {
             @Override
             public void onSubItemClick(int position, String text) {
-                Log.e(TAG, "onSubItemClick: " + position + " " + text);
+                sendMessage(text);
+                hideMessageSuggestion();
             }
         });
         suggestionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         suggestionRecyclerView.setAdapter(suggestionDataAdapter);
         suggestionArea = view.findViewById(R.id.suggestionArea);
-        showMessageSuggestion();
 
         // edit text and send button
         ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
-        EditText messageEditText = view.findViewById(R.id.messageEditText);
+        messageEditText = view.findViewById(R.id.messageEditText);
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +106,15 @@ public class FragmentAssistant extends Fragment {
             }
         });
 
+        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showMessageSuggestion();
+                }
+            }
+        });
+
         // hide keyboard
         ViewGroup navBar = view.findViewById(R.id.navBar);
         navBar.setOnTouchListener(new View.OnTouchListener() {
@@ -112,6 +122,7 @@ public class FragmentAssistant extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     hideKeyboard();
+                    hideMessageSuggestion();
                 }
                 return false;
             }
@@ -121,6 +132,7 @@ public class FragmentAssistant extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     hideKeyboard();
+                    hideMessageSuggestion();
                 }
                 return false;
             }
@@ -150,6 +162,7 @@ public class FragmentAssistant extends Fragment {
                                     @Override
                                     public void run() {
                                         updateServerStatus();
+                                        showMessageSuggestion();
                                     }
                                 });
                             }
@@ -162,6 +175,7 @@ public class FragmentAssistant extends Fragment {
                                     @Override
                                     public void run() {
                                         replyMessage(message);
+                                        showMessageSuggestion();
                                     }
                                 });
                             }
@@ -214,7 +228,7 @@ public class FragmentAssistant extends Fragment {
 
     private void showMessageSuggestion() {
         if (suggestionArea != null) {
-            if (suggestionArea.getVisibility() != View.VISIBLE) {
+            if (suggestionArea.getVisibility() != View.VISIBLE && socketStatus) {
                 suggestionArea.setVisibility(View.VISIBLE);
             }
         }
@@ -228,6 +242,11 @@ public class FragmentAssistant extends Fragment {
                 if (focusView != null) {
                     imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
                 }
+            }
+        }
+        if (messageEditText != null) {
+            if (messageEditText.isFocused()) {
+                messageEditText.clearFocus();
             }
         }
     }
