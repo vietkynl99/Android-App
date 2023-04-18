@@ -147,93 +147,83 @@
             tools:listitem="@layout/suggestion_recycler_view_item" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/send_a_message_prompt"
+    <LinearLayout
+        android:id="@+id/send_message_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="bottom">
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp">
 
 
         <LinearLayout
-            android:id="@+id/send_message_input"
-            android:layout_width="match_parent"
+            android:id="@+id/input"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="5dp">
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_rectangle">
 
 
-            <LinearLayout
-                android:id="@+id/input"
+            <EditText
+                android:id="@+id/messageEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_no_underline"
+                android:ems="10"
+                android:fontFamily="DM Sans"
+                android:gravity="start|top"
+                android:hint="@string/type_a_message____string"
+                android:inputType="textMultiLine"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:id="@+id/icon_linear_microphone_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rectangle">
+                android:layout_marginEnd="20dp">
 
-
-                <EditText
-                    android:id="@+id/messageEditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/edit_text_no_underline"
-                    android:ems="10"
-                    android:fontFamily="DM Sans"
-                    android:gravity="start|top"
-                    android:hint="@string/type_a_message____string"
-                    android:inputType="textMultiLine"
-                    android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/icon_linear_microphone_1"
+                    android:id="@+id/microphone_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="20dp">
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp">
 
-
-                    <RelativeLayout
-                        android:id="@+id/microphone_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="2dp">
-
-                        <ImageView
-                            android:id="@+id/vector"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginTop="0dp"
-                            android:contentDescription="@string/content_description"
-                            android:src="@drawable/vector" />
-
-                    </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/vector"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:contentDescription="@string/content_description"
+                        android:src="@drawable/vector" />
 
                 </RelativeLayout>
 
-            </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/sendMessageButton"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/background_shape"
-                android:contentDescription="@string/content_description"
-                app:srcCompat="@drawable/vector_ek1" />
-
+            </RelativeLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <ImageButton
+            android:id="@+id/sendMessageButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/background_shape"
+            android:contentDescription="@string/content_description"
+            app:srcCompat="@drawable/vector_ek1" />
+
+
+    </LinearLayout>
 
 </LinearLayout>
