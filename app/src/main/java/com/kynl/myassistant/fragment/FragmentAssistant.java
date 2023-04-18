@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kynl.myassistant.R;
@@ -36,6 +37,7 @@ public class FragmentAssistant extends Fragment {
     private RecyclerView messageRecyclerView, suggestionRecyclerView;
     private MessageDataAdapter messageDataAdapter;
     private SuggestionDataAdapter suggestionDataAdapter;
+    private LinearLayout suggestionArea;
     private boolean socketStatus = false;
 
     private BroadcastReceiver mBroadcastReceiver;
@@ -75,6 +77,7 @@ public class FragmentAssistant extends Fragment {
         suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList());
         suggestionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         suggestionRecyclerView.setAdapter(suggestionDataAdapter);
+        suggestionArea = view.findViewById(R.id.suggestionArea);
 
         // edit text and send button
         ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
@@ -187,6 +190,22 @@ public class FragmentAssistant extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
+    }
+
+    private void hideMessageSuggestion() {
+        if (suggestionArea != null) {
+            if (suggestionArea.getVisibility() == View.VISIBLE) {
+                suggestionArea.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void showMessageSuggestion() {
+        if (suggestionArea != null) {
+            if (suggestionArea.getVisibility() != View.VISIBLE) {
+                suggestionArea.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void hideKeyboard() {

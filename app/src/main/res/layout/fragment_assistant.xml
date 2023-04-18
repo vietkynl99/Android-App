@@ -132,11 +132,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/suggestionArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        android:paddingEnd="10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/suggestionRecyclerView"

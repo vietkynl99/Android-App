@@ -35,6 +35,12 @@ public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAd
     @Override
     public void onBindViewHolder(@NonNull MessageDataViewHolder holder, int position) {
         holder.suggestionText.setText(suggestionDataList.get(position));
+        holder.suggestionText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -54,7 +60,6 @@ public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAd
         public MessageDataViewHolder(@NonNull View itemView) {
             super(itemView);
             suggestionText = itemView.findViewById(R.id.suggestionText);
-
         }
     }
 }

@@ -27,11 +27,10 @@ public class MessageManager {
         replyMessage("I am your virtual assistant. May I help you?");
 
         suggestionDataList = new ArrayList<>();
-        suggestionDataList.add("Suggestion 1");
-        suggestionDataList.add("Suggestion 2");
-        suggestionDataList.add("Suggestion 3");
-        suggestionDataList.add("Suggestion 4");
-        suggestionDataList.add("Suggestion 5");
+        suggestionDataList.add("Turn on the lamp 1");
+        suggestionDataList.add("Turn on the lamp 2");
+        suggestionDataList.add("Turn off the lamp 1");
+        suggestionDataList.add("Turn off the lamp 2");
     }
 
     public List<MessageData> getMessageDataList() {
