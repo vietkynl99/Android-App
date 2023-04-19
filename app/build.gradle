@@ -44,4 +44,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.larswerkman:HoloColorPicker:1.5'
+    implementation 'com.github.marcinmoskala:ArcSeekBar:0.31'
 }
