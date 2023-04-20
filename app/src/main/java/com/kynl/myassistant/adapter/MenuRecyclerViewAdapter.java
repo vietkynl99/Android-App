@@ -42,7 +42,6 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         holder.menuIconLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                select(position);
                 // not use text
                 if (onSubItemClickListener != null) {
                     onSubItemClickListener.onSubItemClick(position, "");

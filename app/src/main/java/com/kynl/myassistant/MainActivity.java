@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<MenuElement> menuElementList;
     private List<Integer> menuElementIconIdList;
+    MenuRecyclerViewAdapter menuRecyclerViewAdapter;
 
     private FragmentManager fragmentManager;
     private int pre_fragment_index = -1;
@@ -61,23 +63,23 @@ public class MainActivity extends AppCompatActivity {
 
         // menu
         menuElementList = new ArrayList<>();
-        menuElementList.add(new MenuElement(R.drawable.light_on_w_80, LightFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.thermometer_w_48, TemperatureFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.fan_w_50, FanFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.pump_w_50, PumpFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.media_64, MediaFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.light_on_w_80, LightFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.thermometer_w_48, TemperatureFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.fan_w_50, FanFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.pump_w_50, PumpFragment.class.getName()));
-        menuElementList.add(new MenuElement(R.drawable.media_64, MediaFragment.class.getName()));
+        menuElementList.add(new MenuElement("Light", R.drawable.light_on_w_80, LightFragment.class.getName()));
+        menuElementList.add(new MenuElement("Temperature", R.drawable.thermometer_w_48, TemperatureFragment.class.getName()));
+        menuElementList.add(new MenuElement("Fan", R.drawable.fan_w_50, FanFragment.class.getName()));
+        menuElementList.add(new MenuElement("Pump", R.drawable.pump_w_50, PumpFragment.class.getName()));
+        menuElementList.add(new MenuElement("Media", R.drawable.media_64, MediaFragment.class.getName()));
+        menuElementList.add(new MenuElement("Light", R.drawable.light_on_w_80, LightFragment.class.getName()));
+        menuElementList.add(new MenuElement("Temperature", R.drawable.thermometer_w_48, TemperatureFragment.class.getName()));
+        menuElementList.add(new MenuElement("Fan", R.drawable.fan_w_50, FanFragment.class.getName()));
+        menuElementList.add(new MenuElement("Pump", R.drawable.pump_w_50, PumpFragment.class.getName()));
+        menuElementList.add(new MenuElement("Media", R.drawable.media_64, MediaFragment.class.getName()));
 
         menuElementIconIdList = new ArrayList<>();
         for (MenuElement menuElement : menuElementList) {
             menuElementIconIdList.add(menuElement.getIconId());
         }
 
-        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuElementIconIdList);
+        menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuElementIconIdList);
         menuRecyclerViewAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
             @Override
             public void onSubItemClick(int position, String text) {
@@ -91,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         // fragmentManager
         fragmentManager = getSupportFragmentManager();
         changeFragment(0);
-        menuRecyclerViewAdapter.select(0);
 
         // Bubble chat
         FrameLayout bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
@@ -169,10 +170,16 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(int index) {
         if (pre_fragment_index != index && index >= 0 && index < menuElementList.size()) {
             try {
+                // create fragment object
                 String fragmentClassName = menuElementList.get(index).getFragmentClassName();
                 Class<?> fragmentClass = Class.forName(fragmentClassName);
                 Fragment fragment = (Fragment) fragmentClass.newInstance();
                 fragmentManager.beginTransaction().replace(R.id.fragment_content, fragment).commit();
+                // update selected position
+                menuRecyclerViewAdapter.select(index);
+                // name
+                TextView menuItemName = findViewById(R.id.menuItemName);
+                menuItemName.setText(menuElementList.get(index).getItemName());
                 pre_fragment_index = index;
             } catch (Exception e) {
                 e.printStackTrace();
