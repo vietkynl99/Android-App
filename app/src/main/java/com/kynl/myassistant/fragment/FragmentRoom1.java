@@ -1,9 +1,13 @@
 package com.kynl.myassistant.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +15,17 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.kynl.myassistant.R;
-import com.kynl.myassistant.adapter.GridViewAdapter;
+import com.kynl.myassistant.adapter.DeviceRecyclerViewAdapter;
+import com.kynl.myassistant.adapter.MenuRecyclerViewAdapter;
+import com.kynl.myassistant.adapter.OnSubItemClickListener;
 import com.kynl.myassistant.model.Device;
 import com.larswerkman.holocolorpicker.OpacityBar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
 
 
 public class FragmentRoom1 extends Fragment {
@@ -81,10 +90,21 @@ public class FragmentRoom1 extends Fragment {
         OpacityBar lightOpacityBar = view.findViewById(R.id.lightOpacityBar);
         lightOpacityBar.setColor(ContextCompat.getColor(getContext(), R.color.white));
 
-        // gridView
-        GridViewAdapter gridViewAdapter = new GridViewAdapter(getContext(), deviceList);
-        GridView gridView = view.findViewById(R.id.gridView);
-        gridView.setAdapter(gridViewAdapter);
+        // deviceRecyclerViewAdapter
+        DeviceRecyclerViewAdapter deviceRecyclerViewAdapter = new DeviceRecyclerViewAdapter(deviceList);
+        deviceRecyclerViewAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
+            @Override
+            public void onSubItemClick(int position, String text) {
+                Intent intent = new Intent(SOCKET_ACTION_REQ);
+                intent.putExtra("event", SOCKET_REQ_UPDATE_DEVICE);
+                intent.putExtra("name", deviceList.get(position).getName());
+                intent.putExtra("type", "switch");
+                intent.putExtra("status", text == "1");
+                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+            }
+        });
+        RecyclerView deviceRecyclerView = view.findViewById(R.id.deviceRecyclerView);
+        deviceRecyclerView.setAdapter(deviceRecyclerViewAdapter);
 
         return view;
     }

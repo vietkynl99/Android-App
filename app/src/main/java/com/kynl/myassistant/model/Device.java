@@ -4,7 +4,7 @@ public class Device {
     private int id;
     private Type type;
     private String name;
-    private State status;
+    private State state;
 
     public enum Type {
         LIGHT,
@@ -20,11 +20,11 @@ public class Device {
         INVALID
     }
 
-    public Device(int id, Type type, String name, State status) {
+    public Device(int id, Type type, String name, State state) {
         this.id = id;
         this.type = type;
         this.name = name;
-        this.status = status;
+        this.state = state;
     }
 
     public int getId() {
@@ -51,11 +51,11 @@ public class Device {
         this.name = name;
     }
 
-    public State getStatus() {
-        return status;
+    public State getState() {
+        return state;
     }
 
-    public void setStatus(State status) {
-        this.status = status;
+    public void setState(State state) {
+        this.state = state;
     }
 }
