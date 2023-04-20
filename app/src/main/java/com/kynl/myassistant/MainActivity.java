@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         // fragmentManager
         fragmentManager = getSupportFragmentManager();
         changeFragment(0);
+        menuRecyclerViewAdapter.select(0);
 
         // Bubble chat
         FrameLayout bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
