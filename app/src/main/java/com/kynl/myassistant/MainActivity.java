@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kynl.myassistant.adapter.MenuRecyclerViewAdapter;
@@ -31,8 +33,13 @@ import com.kynl.myassistant.service.SocketService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
+
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+
+    private String serverAddress;
+    private boolean weatherForecastEnable;
 
     private List<MenuElement> menuElementList;
     private List<Integer> menuElementIconIdList;
@@ -45,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        readOldSetting();
+
+        checkWeatherForecastVisibility();
 
         // Start Socket service
         Log.i(TAG, "onCreate: Start service");
@@ -118,6 +129,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkWeatherForecastVisibility();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         super.onDestroy();
@@ -126,6 +143,29 @@ public class MainActivity extends AppCompatActivity {
         // Stop service
         Intent intent = new Intent(this, SocketService.class);
         stopService(intent);
+    }
+
+    private void readOldSetting() {
+        SharedPreferences prefs = getSharedPreferences(SOCKET_PREFERENCES, Context.MODE_PRIVATE);
+        // serverAddress
+        String address = prefs.getString("serverAddress", null);
+        if (address != null) {
+            serverAddress = address;
+        } else {
+            serverAddress = "";
+        }
+        // weatherForecast
+        weatherForecastEnable = prefs.getBoolean("weatherForecastEnable", false);
+    }
+
+    private void checkWeatherForecastVisibility() {
+        readOldSetting();
+        LinearLayout weatherForecastLayout = findViewById(R.id.weatherForecastLayout);
+        if (weatherForecastLayout != null) {
+            if (weatherForecastEnable != (weatherForecastLayout.getVisibility() == View.VISIBLE)) {
+                weatherForecastLayout.setVisibility(weatherForecastEnable ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 
     private void changeFragment(int index) {

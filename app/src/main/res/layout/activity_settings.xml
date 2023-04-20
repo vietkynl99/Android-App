@@ -172,10 +172,11 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Notification"
+                        android:text="Weather forecast"
                         android:textColor="@color/text_light_color" />
 
                     <Switch
+                        android:id="@+id/weatherForecastSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
