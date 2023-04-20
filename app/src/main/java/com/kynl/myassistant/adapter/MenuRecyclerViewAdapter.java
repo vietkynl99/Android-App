@@ -22,6 +22,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     private final String TAG = "MenuRecyclerViewAdapter";
     private List<Integer> menuIconList;
     private int selectedItemPosition;
+    private OnSubItemClickListener onSubItemClickListener;
 
     public MenuRecyclerViewAdapter(List<Integer> menuIconList) {
         this.menuIconList = menuIconList;
@@ -32,7 +33,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_recycler_view_item, parent, false);
-        return new CustomViewHolder(view);
+        return new CustomViewHolder(view, onSubItemClickListener);
     }
 
     @Override
@@ -41,12 +42,10 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         holder.menuIconLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedItemPosition != position) {
-                    if (selectedItemPosition >= 0 && selectedItemPosition < getItemCount()) {
-                        notifyItemChanged(selectedItemPosition);
-                    }
-                    selectedItemPosition = position;
-                    notifyItemChanged(position);
+                select(position);
+                // not use text
+                if (onSubItemClickListener != null) {
+                    onSubItemClickListener.onSubItemClick(position, "");
                 }
             }
         });
@@ -57,12 +56,30 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         return (menuIconList != null) ? menuIconList.size() : 0;
     }
 
+    public void setOnSubItemClickListener(OnSubItemClickListener onSubItemClickListener) {
+        this.onSubItemClickListener = onSubItemClickListener;
+    }
+
+    public void select(int position) {
+        if (position >= 0 && position < getItemCount()) {
+            if (selectedItemPosition != position) {
+                if (selectedItemPosition >= 0 && selectedItemPosition < getItemCount()) {
+                    notifyItemChanged(selectedItemPosition);
+                }
+                selectedItemPosition = position;
+                notifyItemChanged(position);
+            }
+        }
+    }
+
     class CustomViewHolder extends RecyclerView.ViewHolder {
+        private OnSubItemClickListener onSubItemClickListener;
         ImageView menuIcon;
         LinearLayout menuIconLayout;
 
-        public CustomViewHolder(@NonNull View itemView) {
+        public CustomViewHolder(@NonNull View itemView, OnSubItemClickListener onSubItemClickListener) {
             super(itemView);
+            this.onSubItemClickListener = onSubItemClickListener;
             menuIcon = itemView.findViewById(R.id.menuIcon);
             menuIconLayout = itemView.findViewById(R.id.menuIconLayout);
         }

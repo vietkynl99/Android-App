@@ -152,46 +152,6 @@
                 tools:spanCount="5" />
         </LinearLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:tabIconTint="@color/tab_icon_tint_selector"
-            app:tabMode="scrollable"
-            app:tabTextColor="@color/text_light_color">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/light_on_w_80"
-                android:text="Light" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/thermometer_w_48"
-                android:text="Temperature" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/fan_w_50"
-                android:text="Fan" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/pump_w_50"
-                android:text="Pump" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/media_64"
-                android:text="Media" />
-        </com.google.android.material.tabs.TabLayout>
-
         <FrameLayout
             android:id="@+id/fragment_content"
             android:layout_width="match_parent"
