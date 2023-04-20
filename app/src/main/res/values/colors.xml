@@ -13,7 +13,7 @@
     <color name="screen_background">#FFFFFFFF</color>
 
     <color name="button_background">#4C4D63</color>
-    <color name="setting_item_background">#4C4D63</color>
+    <color name="item_background">#4C4D63</color>
 
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>

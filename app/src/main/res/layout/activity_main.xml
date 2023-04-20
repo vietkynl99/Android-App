@@ -58,6 +58,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/weather_shape_background"
             android:orientation="horizontal"
             android:padding="20dp">
@@ -131,6 +132,24 @@
                     android:textSize="20sp" />
 
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/menuRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                tools:itemCount="5"
+                tools:layoutManager="GridLayoutManager"
+                tools:listitem="@layout/menu_recycler_view_item"
+                tools:spanCount="5" />
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout

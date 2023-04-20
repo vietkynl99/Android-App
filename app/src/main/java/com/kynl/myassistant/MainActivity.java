@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.widget.TableLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
+import com.kynl.myassistant.adapter.MenuRecyclerViewAdapter;
 import com.kynl.myassistant.fragment.FanFragment;
 import com.kynl.myassistant.fragment.FragmentHome;
 import com.kynl.myassistant.fragment.LightFragment;
@@ -31,8 +34,16 @@ import com.kynl.myassistant.fragment.PumpFragment;
 import com.kynl.myassistant.fragment.TemperatureFragment;
 import com.kynl.myassistant.service.SocketService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+
+    private List<Integer> menuIconList;
+    private RecyclerView menuRecyclerView;
+    private MenuRecyclerViewAdapter menuRecyclerViewAdapter;
+
     private FragmentManager fragmentManager;
     private int pre_fragment_index = -1;
 
@@ -45,6 +56,23 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: Start service");
         Intent intent = new Intent(this, SocketService.class);
         startService(intent);
+
+        // menu
+        menuIconList = new ArrayList<>();
+        menuIconList.add(R.drawable.light_on_w_80);
+        menuIconList.add(R.drawable.thermometer_w_48);
+        menuIconList.add(R.drawable.fan_w_50);
+        menuIconList.add(R.drawable.pump_w_50);
+        menuIconList.add(R.drawable.media_64);
+        menuIconList.add(R.drawable.light_on_w_80);
+        menuIconList.add(R.drawable.thermometer_w_48);
+        menuIconList.add(R.drawable.fan_w_50);
+        menuIconList.add(R.drawable.pump_w_50);
+        menuIconList.add(R.drawable.media_64);
+        menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuIconList);
+        menuRecyclerView = findViewById(R.id.menuRecyclerView);
+        menuRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        menuRecyclerView.setAdapter(menuRecyclerViewAdapter);
 
         // tabLayout
         fragmentManager = getSupportFragmentManager();
