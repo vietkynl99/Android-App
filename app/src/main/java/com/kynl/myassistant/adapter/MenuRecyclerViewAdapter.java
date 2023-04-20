@@ -74,18 +74,21 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     class CustomViewHolder extends RecyclerView.ViewHolder {
         private OnSubItemClickListener onSubItemClickListener;
         ImageView menuIcon;
-        LinearLayout menuIconLayout;
+        ViewGroup menuIconLayout;
+        View dotHighlight;
 
         public CustomViewHolder(@NonNull View itemView, OnSubItemClickListener onSubItemClickListener) {
             super(itemView);
             this.onSubItemClickListener = onSubItemClickListener;
             menuIcon = itemView.findViewById(R.id.menuIcon);
             menuIconLayout = itemView.findViewById(R.id.menuIconLayout);
+            dotHighlight = itemView.findViewById(R.id.dotHighlight);
         }
 
         public void bind(int iconId, boolean isSelected) {
             menuIcon.setImageResource(iconId);
             menuIconLayout.setSelected(isSelected);
+            dotHighlight.setVisibility(isSelected? View.VISIBLE : View.GONE);
         }
     }
 }
