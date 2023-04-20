@@ -2,6 +2,7 @@ package com.kynl.myassistant.fragment;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.GridView;
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.GridViewAdapter;
 import com.kynl.myassistant.model.Device;
+import com.larswerkman.holocolorpicker.OpacityBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,10 @@ public class FragmentRoom1 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_room1, container, false);
+
+        // lightOpacityBar
+        OpacityBar lightOpacityBar = view.findViewById(R.id.lightOpacityBar);
+        lightOpacityBar.setColor(ContextCompat.getColor(getContext(), R.color.white));
 
         // gridView
         GridViewAdapter gridViewAdapter = new GridViewAdapter(getContext(), deviceList);
