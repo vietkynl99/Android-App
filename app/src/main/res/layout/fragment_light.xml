@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/primary"
     android:padding="15dp"
-    tools:context=".fragment.LightFragment">
+    tools:context=".fragment.FragmentRoom1">
 
     <GridView
         android:id="@+id/gridView"
