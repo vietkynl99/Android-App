@@ -9,6 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class FragmentRoom1 extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private final String TAG = "FragmentRoom1";
     private List<Device> deviceList;
 
 
@@ -99,7 +101,7 @@ public class FragmentRoom1 extends Fragment {
                 intent.putExtra("event", SOCKET_REQ_UPDATE_DEVICE);
                 intent.putExtra("name", deviceList.get(position).getName());
                 intent.putExtra("type", "switch");
-                intent.putExtra("status", text == "1");
+                intent.putExtra("status", text == "1" ? 1 : 0);
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
             }
         });
