@@ -15,41 +15,48 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:paddingStart="15dp"
-            android:paddingTop="15dp"
-            android:paddingEnd="15dp">
+            android:layout_height="wrap_content"
+            android:padding="15dp">
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/settingsButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:foregroundGravity="center"
+                    app:srcCompat="@drawable/setting_white_48" />
+            </FrameLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="@string/setting_dashboard"
+                android:textColor="@color/text_light_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <FrameLayout
-                    android:id="@+id/settingsButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp">
+        </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/imageView8"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center"
-                        android:foregroundGravity="center"
-                        app:srcCompat="@drawable/setting_white_48" />
-                </FrameLayout>
+        <LinearLayout
+            android:id="@+id/serverWarningPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp">
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/setting_dashboard"
-                    android:textColor="@color/text_light_color"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/warning_server_is_disconnected"
+                android:textColor="@color/warning" />
         </LinearLayout>
 
         <LinearLayout
@@ -58,6 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/weather_shape_background"
             android:orientation="horizontal"

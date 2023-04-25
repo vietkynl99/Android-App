@@ -11,6 +11,7 @@
     <string name="active_status_disconnected">Disconnected</string>
 
     <string name="send_message_error">Server is disconnected. Try again.</string>
+    <string name="warning_server_is_disconnected">Server is disconnected</string>
 
     <string name="setting_dashboard">Dashboard</string>
 

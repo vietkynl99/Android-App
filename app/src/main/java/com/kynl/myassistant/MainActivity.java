@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,13 +36,20 @@ import com.kynl.myassistant.service.SocketService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_DATA;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     private String serverAddress;
     private boolean weatherForecastEnable;
+    private boolean socketStatus = false;
+    private BroadcastReceiver mBroadcastReceiver;
+
+    private ViewGroup serverWarningPanel;
 
     private List<MenuElement> menuElementList;
     private List<Integer> menuElementIconIdList;
@@ -56,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         readOldSetting();
 
         checkWeatherForecastVisibility();
+
+        serverWarningPanel = findViewById(R.id.serverWarningPanel);
 
         // Start Socket service
         Log.i(TAG, "onCreate: Start service");
@@ -132,6 +144,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkWeatherForecastVisibility();
+        // register broadcast
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String event = intent.getStringExtra("event");
+                if (event != null) {
+                    switch (event) {
+                        case "status":
+                            int status = intent.getIntExtra("status", -1);
+                            if (status >= 0) {
+                                Log.e(TAG, "onReceive: get socket status=" + status);
+                                socketStatus = status == 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (serverWarningPanel != null) {
+                                            serverWarningPanel.setVisibility(socketStatus ? View.GONE : View.VISIBLE);
+                                        }
+                                    }
+                                });
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mBroadcastReceiver, new IntentFilter(SOCKET_ACTION_DATA));
+
+        // send request to socket service
+        requestSocketStatusFromService();
     }
 
     @Override
@@ -143,6 +188,18 @@ public class MainActivity extends AppCompatActivity {
         // Stop service
         Intent intent = new Intent(this, SocketService.class);
         stopService(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+        super.onPause();
+    }
+
+    private void requestSocketStatusFromService() {
+        Intent intent = new Intent(SOCKET_ACTION_REQ);
+        intent.putExtra("event", SOCKET_REQ_STATUS);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
     private void readOldSetting() {

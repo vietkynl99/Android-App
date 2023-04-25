@@ -18,6 +18,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="warning">#D81B60</color>
 
     <color name="primary">#202128</color>
     <color name="secondary">#008375</color>
