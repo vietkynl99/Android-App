@@ -121,6 +121,7 @@ public class SocketService extends Service {
                 switch (event) {
                     case SOCKET_REQ_STATUS:
                         sendSocketStatus();
+                        reconnectToSocketSever();
                         break;
                     case SOCKET_REQ_SEND_MESS:
                         String message = intent.getStringExtra("message");
@@ -156,6 +157,15 @@ public class SocketService extends Service {
             }
         }
     };
+
+    private void reconnectToSocketSever() {
+        if(socket != null && serverAddress != null && !serverAddress.isEmpty()) {
+            if(!socket.connected()) {
+                Log.i(TAG, "reconnectToSocketSever: " + serverAddress);
+                socket.connect();
+            }
+        }
+    }
 
     private void connectToSocketSever() {
         if (serverAddress != null && !serverAddress.isEmpty()) {
