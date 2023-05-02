@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
 import com.kynl.myassistant.adapter.OnSubItemClickListener;
+import com.kynl.myassistant.adapter.OnSubItemLongClickListener;
 import com.kynl.myassistant.adapter.SuggestionDataAdapter;
 import com.kynl.myassistant.model.MessageData;
 import com.kynl.myassistant.model.MessageManager;
@@ -39,7 +40,7 @@ import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
 
 public class FragmentAssistant extends Fragment {
 
-    private static final String TAG = "Fragment2";
+    private final String TAG = this.getClass().getName();
     private RecyclerView messageRecyclerView, suggestionRecyclerView;
     private MessageDataAdapter messageDataAdapter;
     private SuggestionDataAdapter suggestionDataAdapter;
@@ -47,6 +48,8 @@ public class FragmentAssistant extends Fragment {
     private boolean socketStatus = false;
 
     private BroadcastReceiver mBroadcastReceiver;
+    private ViewGroup navBarNormal, navBarAdvance;
+    private ImageButton navBarAdvanceCloseButton;
     private View indicatorLightStatus;
     private TextView activeStatus;
     private EditText messageEditText;
@@ -70,18 +73,28 @@ public class FragmentAssistant extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assistant, container, false);
 
+        navBarNormal = view.findViewById(R.id.navBarNormal);
+        navBarAdvance = view.findViewById(R.id.navBarAdvance);
         indicatorLightStatus = view.findViewById(R.id.indicatorLightStatus);
         activeStatus = view.findViewById(R.id.activeStatus);
 
         // message recyclerview
         messageRecyclerView = view.findViewById(R.id.messageRecyclerView);
         messageDataAdapter = new MessageDataAdapter(MessageManager.getInstance().getMessageDataList());
+        messageDataAdapter.setOnSubItemLongClickListener(new OnSubItemLongClickListener() {
+            @Override
+            public void onSubItemLongClick(int position, String text) {
+                Log.e(TAG, "onSubItemLongClick: " + position + " " + text);
+                setAdvanceMenuVisibility(true);
+            }
+        });
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         messageRecyclerView.setAdapter(messageDataAdapter);
 
         // suggestion message recyclerview
         suggestionRecyclerView = view.findViewById(R.id.suggestionRecyclerView);
-        suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList(), new OnSubItemClickListener() {
+        suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList());
+        suggestionDataAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
             @Override
             public void onSubItemClick(int position, String text) {
                 sendMessage(text);
@@ -135,6 +148,15 @@ public class FragmentAssistant extends Fragment {
                     hideMessageSuggestion();
                 }
                 return false;
+            }
+        });
+
+        // advance menu
+        navBarAdvanceCloseButton = view.findViewById(R.id.navBarAdvanceCloseButton);
+        navBarAdvanceCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAdvanceMenuVisibility(false);
             }
         });
 
@@ -216,6 +238,15 @@ public class FragmentAssistant extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
+    }
+
+    private void setAdvanceMenuVisibility(boolean visibility) {
+        if (navBarNormal != null) {
+            navBarNormal.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        }
+        if (navBarAdvance != null) {
+            navBarAdvance.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void hideMessageSuggestion() {

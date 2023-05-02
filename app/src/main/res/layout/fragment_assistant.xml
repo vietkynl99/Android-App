@@ -13,46 +13,45 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/nav_bubble_chat"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
 
         <LinearLayout
-            android:id="@+id/top_nav_bar"
+            android:id="@+id/navBarNormal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:baselineAligned="false"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp">
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp">
 
-
-            <ImageView
-                android:id="@+id/bubbleChatBack"
-                android:layout_width="18dp"
-                android:layout_height="12dp"
+            <ImageButton
+                android:layout_width="27dp"
+                android:layout_height="27dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
-                android:contentDescription="@string/content_description"
-                android:src="@drawable/vector_back" />
+                android:background="@drawable/button_transparent_background"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/vector_back" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 app:cardCornerRadius="100dp"
                 app:cardElevation="1dp">
 
                 <ImageView
-                    android:id="@+id/imageView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/content_description"
                     app:srcCompat="@drawable/chatbot_avatar" />
             </androidx.cardview.widget.CardView>
 
             <RelativeLayout
-                android:id="@+id/name___activity"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -61,7 +60,6 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/fitbot_ek1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fitbot_ek1_string"
@@ -71,7 +69,6 @@
 
 
                 <LinearLayout
-                    android:id="@+id/always_active"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"
@@ -99,16 +96,84 @@
 
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/vector_more"
-                android:layout_width="20dp"
-                android:layout_height="4dp"
+            <ImageButton
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/content_description"
-                android:src="@drawable/vector_more" />
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/button_transparent_background"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/vector_more" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navBarAdvance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/navBarAdvanceCloseButton"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_transparent_background"
+                android:contentDescription="@string/content_description"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/close_b_50" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="@string/number_0"
+                android:textColor="@color/text_dark_color"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/button_transparent_background"
+                android:contentDescription="@string/content_description"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/copy_b_24" />
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/button_transparent_background"
+                android:contentDescription="@string/content_description"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/delete_b_24" />
+
+            <ImageButton
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/button_transparent_background"
+                android:contentDescription="@string/content_description"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/vector_more" />
 
         </LinearLayout>
     </FrameLayout>

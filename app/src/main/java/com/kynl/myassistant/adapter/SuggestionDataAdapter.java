@@ -22,9 +22,8 @@ public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAd
     private List<String> suggestionDataList;
     private OnSubItemClickListener onSubItemClickListener;
 
-    public SuggestionDataAdapter(List<String> suggestionDataList, OnSubItemClickListener onSubItemClickListener) {
+    public SuggestionDataAdapter(List<String> suggestionDataList) {
         this.suggestionDataList = suggestionDataList;
-        this.onSubItemClickListener = onSubItemClickListener;
     }
 
     @NonNull
@@ -37,17 +36,24 @@ public class SuggestionDataAdapter extends RecyclerView.Adapter<SuggestionDataAd
     @Override
     public void onBindViewHolder(@NonNull MessageDataViewHolder holder, int position) {
         holder.suggestionText.setText(suggestionDataList.get(position));
-        holder.suggestionText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSubItemClickListener.onSubItemClick(position, suggestionDataList.get(position));
-            }
-        });
+
+        if (onSubItemClickListener != null) {
+            holder.suggestionText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onSubItemClickListener.onSubItemClick(position, suggestionDataList.get(position));
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
         return (suggestionDataList != null) ? suggestionDataList.size() : 0;
+    }
+
+    public void setOnSubItemClickListener(OnSubItemClickListener onSubItemClickListener) {
+        this.onSubItemClickListener = onSubItemClickListener;
     }
 
     public void updateItemInserted() {
