@@ -131,7 +131,7 @@
                 app:srcCompat="@drawable/close_b_50" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/selectedItemCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -142,6 +142,7 @@
                 android:textSize="16sp" />
 
             <ImageButton
+                android:id="@+id/copyButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
@@ -153,6 +154,7 @@
                 app:srcCompat="@drawable/copy_b_24" />
 
             <ImageButton
+                android:id="@+id/deleteButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"

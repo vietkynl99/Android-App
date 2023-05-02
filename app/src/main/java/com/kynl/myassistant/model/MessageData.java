@@ -12,6 +12,8 @@ public class MessageData {
     private String message;
     private Date dateTime;
 
+    private boolean selected;
+
     SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
     SimpleDateFormat todayDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat today12hDateFormat = new SimpleDateFormat("hh:mm a");
@@ -21,6 +23,7 @@ public class MessageData {
         this.error = error;
         this.message = message;
         this.dateTime = dateTime;
+        selected = false;
     }
 
     public Date getDateTime() {
@@ -63,5 +66,13 @@ public class MessageData {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

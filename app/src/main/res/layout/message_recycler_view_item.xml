@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="2dp"
-        android:text="8:00 AM"
+        android:text="@string/time_sample"
         android:textSize="12sp" />
 
     <LinearLayout
@@ -39,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/content_description"
                     app:srcCompat="@drawable/chatbot_avatar" />
 
             </androidx.cardview.widget.CardView>
@@ -51,31 +52,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/layoutPartnerMessagePosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="40dp"
-                android:background="@drawable/message_background_rectangle">
+                android:background="@drawable/selector_partner_message_background"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewPartnerMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="false"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="8dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layoutMyMessagePosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:layout_marginStart="40dp"
                 android:orientation="vertical">
 
@@ -83,9 +84,9 @@
                     android:id="@+id/layoutMyMessageShape"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_marginBottom="2dp"
-                    android:background="@drawable/message_background_rectangle_sender">
+                    android:background="@drawable/selector_my_message_background">
 
                     <TextView
                         android:id="@+id/textViewMyMessage"
@@ -112,6 +113,7 @@
                         android:layout_height="12dp"
                         android:layout_gravity="center"
                         android:layout_marginEnd="4dp"
+                        android:contentDescription="@string/content_description"
                         android:src="@drawable/error" />
 
                     <TextView

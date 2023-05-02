@@ -1,6 +1,8 @@
 package com.kynl.myassistant.fragment;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
@@ -46,10 +49,13 @@ public class FragmentAssistant extends Fragment {
     private SuggestionDataAdapter suggestionDataAdapter;
     private LinearLayout suggestionArea;
     private boolean socketStatus = false;
+    private boolean isAdvanceMode = false;
 
     private BroadcastReceiver mBroadcastReceiver;
+
+    private TextView selectedItemCount;
     private ViewGroup navBarNormal, navBarAdvance;
-    private ImageButton navBarAdvanceCloseButton;
+    private ImageButton navBarAdvanceCloseButton, copyButton, deleteButton;
     private View indicatorLightStatus;
     private TextView activeStatus;
     private EditText messageEditText;
@@ -75,21 +81,67 @@ public class FragmentAssistant extends Fragment {
 
         navBarNormal = view.findViewById(R.id.navBarNormal);
         navBarAdvance = view.findViewById(R.id.navBarAdvance);
+        selectedItemCount = view.findViewById(R.id.selectedItemCount);
+        copyButton = view.findViewById(R.id.copyButton);
+        deleteButton = view.findViewById(R.id.deleteButton);
         indicatorLightStatus = view.findViewById(R.id.indicatorLightStatus);
         activeStatus = view.findViewById(R.id.activeStatus);
 
         // message recyclerview
         messageRecyclerView = view.findViewById(R.id.messageRecyclerView);
         messageDataAdapter = new MessageDataAdapter(MessageManager.getInstance().getMessageDataList());
+        messageDataAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
+            @Override
+            public void onSubItemClick(int position, String text) {
+                if (isAdvanceMode) {
+                    messageDataAdapter.toggleSelect(position);
+                    updateSelectedItemCount();
+                }
+            }
+        });
         messageDataAdapter.setOnSubItemLongClickListener(new OnSubItemLongClickListener() {
             @Override
             public void onSubItemLongClick(int position, String text) {
-                Log.e(TAG, "onSubItemLongClick: " + position + " " + text);
+                hideMessageSuggestion();
                 setAdvanceMenuVisibility(true);
+                messageDataAdapter.select(position);
+                updateSelectedItemCount();
             }
         });
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         messageRecyclerView.setAdapter(messageDataAdapter);
+
+        // copy message
+        copyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = messageDataAdapter.getFirstSelectedItemString();
+                if (!message.isEmpty()) {
+                    ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("label", message);
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(getContext(), "Copied to clipboard!", Toast.LENGTH_SHORT).show();
+                    exitAdvanceMenu();
+                }
+            }
+        });
+
+        // delete message
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int count = messageDataAdapter.deleteSelectedItem();
+                if (count > 0) {
+                    String message = "Delete " + count + " message";
+                    if (count > 1) {
+                        message += "s";
+                    }
+                    message += "!";
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    exitAdvanceMenu();
+                }
+            }
+        });
 
         // suggestion message recyclerview
         suggestionRecyclerView = view.findViewById(R.id.suggestionRecyclerView);
@@ -123,8 +175,15 @@ public class FragmentAssistant extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    exitAdvanceMenu();
                     showMessageSuggestion();
                 }
+            }
+        });
+        messageEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitAdvanceMenu();
             }
         });
 
@@ -156,7 +215,7 @@ public class FragmentAssistant extends Fragment {
         navBarAdvanceCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setAdvanceMenuVisibility(false);
+                exitAdvanceMenu();
             }
         });
 
@@ -240,12 +299,38 @@ public class FragmentAssistant extends Fragment {
         Log.d(TAG, "onDestroy: ");
     }
 
-    private void setAdvanceMenuVisibility(boolean visibility) {
-        if (navBarNormal != null) {
-            navBarNormal.setVisibility(visibility ? View.GONE : View.VISIBLE);
+    private void updateSelectedItemCount() {
+        if (selectedItemCount != null && messageDataAdapter != null && copyButton != null) {
+            if (isAdvanceMode) {
+                int count = messageDataAdapter.getSelectedItemCount();
+                if (count > 0) {
+                    selectedItemCount.setText(String.valueOf(count));
+                    copyButton.setVisibility(count == 1 ? View.VISIBLE : View.GONE);
+                } else {
+                    setAdvanceMenuVisibility(false);
+                    messageDataAdapter.exitAdvanceMenu();
+                }
+            }
         }
-        if (navBarAdvance != null) {
-            navBarAdvance.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
+    private void setAdvanceMenuVisibility(boolean visibility) {
+        if (navBarNormal == null || navBarAdvance == null) {
+            Log.e(TAG, "setAdvanceMenuVisibility: error null");
+            return;
+        }
+        navBarNormal.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        navBarAdvance.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        isAdvanceMode = visibility;
+        messageDataAdapter.setAdvanceMode(isAdvanceMode);
+    }
+
+    private void exitAdvanceMenu() {
+        if (isAdvanceMode) {
+            setAdvanceMenuVisibility(false);
+            if (messageDataAdapter != null) {
+                messageDataAdapter.exitAdvanceMenu();
+            }
         }
     }
 

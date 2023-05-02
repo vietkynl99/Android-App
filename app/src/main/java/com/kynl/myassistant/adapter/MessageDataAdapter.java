@@ -1,5 +1,7 @@
 package com.kynl.myassistant.adapter;
 
+import android.animation.FloatEvaluator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,9 @@ import java.util.List;
 public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.MessageDataViewHolder> {
     private final String TAG = "MessageDataAdapter";
     private List<MessageData> messageDataList;
+    private OnSubItemClickListener onSubItemClickListener;
     private OnSubItemLongClickListener onSubItemLongClickListener;
+    private boolean isAdvanceMode = false;
 
     public MessageDataAdapter(List<MessageData> messageDataList) {
         this.messageDataList = messageDataList;
@@ -41,11 +45,13 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.GONE : View.VISIBLE);
         holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.GONE);
         holder.layoutMyMessageError.setVisibility(messageData.isError() ? View.VISIBLE : View.GONE);
-        holder.layoutMyMessageShape.setBackgroundResource(messageData.isError() ? R.drawable.message_background_rectangle_error : R.drawable.message_background_rectangle_sender);
+        holder.layoutMyMessageShape.setBackgroundResource(messageData.isError() ? R.drawable.my_error_message_background : R.drawable.selector_my_message_background);
         if (messageData.isMine()) {
             holder.textViewMyMessage.setText(messageData.getMessage());
+            holder.layoutMyMessageShape.setSelected(messageData.isSelected());
         } else {
             holder.textViewPartnerMessage.setText(messageData.getMessage());
+            holder.layoutPartnerMessagePosition.setSelected(messageData.isSelected());
         }
 
         // time
@@ -59,19 +65,29 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.dateTimeText.setText(messageData.getDateTimeString());
         holder.dateTimeText.setVisibility(visibility ? View.VISIBLE : View.GONE);
 
-        // show and hide time of message
-        holder.layoutPartnerMessagePosition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
-        holder.layoutMyMessageShape.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
+        if (onSubItemClickListener != null) {
+            holder.layoutPartnerMessagePosition.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e(TAG, "onClick: isadvancemode " + isAdvanceMode);
+                    if (isAdvanceMode) {
+                        onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
+                    } else {
+                        holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    }
+                }
+            });
+            holder.layoutMyMessageShape.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isAdvanceMode) {
+                        onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
+                    } else {
+                        holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    }
+                }
+            });
+        }
 
         // advance menu
         if (onSubItemLongClickListener != null) {
@@ -97,8 +113,79 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         return (messageDataList != null) ? messageDataList.size() : 0;
     }
 
+    public void setAdvanceMode(boolean isAdvanceMode) {
+        this.isAdvanceMode = isAdvanceMode;
+    }
+
+    public void setOnSubItemClickListener(OnSubItemClickListener onSubItemClickListener) {
+        this.onSubItemClickListener = onSubItemClickListener;
+    }
+
     public void setOnSubItemLongClickListener(OnSubItemLongClickListener onSubItemLongClickListener) {
         this.onSubItemLongClickListener = onSubItemLongClickListener;
+    }
+
+    public void select(int position) {
+        if (position >= 0 && position < messageDataList.size()) {
+            messageDataList.get(position).setSelected(true);
+            notifyItemChanged(position);
+        }
+    }
+
+    public void toggleSelect(int position) {
+        if (position >= 0 && position < messageDataList.size()) {
+            messageDataList.get(position).setSelected(!messageDataList.get(position).isSelected());
+            notifyItemChanged(position);
+        }
+    }
+
+    public void exitAdvanceMenu() {
+        for (int position = 0; position < messageDataList.size(); position++) {
+            if (messageDataList.get(position).isSelected()) {
+                messageDataList.get(position).setSelected(false);
+                notifyItemChanged(position);
+            }
+        }
+    }
+
+    public int getSelectedItemCount() {
+        int count = 0;
+        for (int position = 0; position < messageDataList.size(); position++) {
+            if (messageDataList.get(position).isSelected()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int deleteSelectedItem() {
+        int count = 0;
+        while (true) {
+            int position = 0;
+            boolean existSelectedItem = false;
+            for (position = 0; position < messageDataList.size(); position++) {
+                if (messageDataList.get(position).isSelected()) {
+                    count++;
+                    existSelectedItem = true;
+                    break;
+                }
+            }
+            if (existSelectedItem) {
+                messageDataList.remove(position);
+                notifyItemRemoved(position);
+            } else {
+                return count;
+            }
+        }
+    }
+
+    public String getFirstSelectedItemString() {
+        for (int position = 0; position < messageDataList.size(); position++) {
+            if (messageDataList.get(position).isSelected()) {
+                return messageDataList.get(position).getMessage();
+            }
+        }
+        return "";
     }
 
     public void updateItemInserted() {
@@ -109,8 +196,7 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
 
     class MessageDataViewHolder extends RecyclerView.ViewHolder {
         private FrameLayout layoutAssistantAvatar;
-        private RelativeLayout layoutPartnerMessagePosition;
-        private LinearLayout layoutMyMessagePosition, layoutMyMessageError, layoutMyMessageShape;
+        private LinearLayout layoutPartnerMessagePosition, layoutMyMessagePosition, layoutMyMessageError, layoutMyMessageShape;
         private TextView textViewPartnerMessage, textViewMyMessage, dateTimeText;
 
         public MessageDataViewHolder(@NonNull View itemView) {

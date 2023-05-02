@@ -28,5 +28,6 @@
     <string name="text_on">ON</string>
     <string name="text_off">OFF</string>
 
+    <string name="time_sample">8:00 AM</string>
     <string name="number_0">0</string>
 </resources>
