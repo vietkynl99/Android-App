@@ -45,7 +45,6 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.layoutPartnerMessagePosition.setVisibility(messageData.isMine() ? View.GONE : View.VISIBLE);
         holder.layoutMyMessagePosition.setVisibility(messageData.isMine() ? View.VISIBLE : View.GONE);
         holder.layoutMyMessageError.setVisibility(messageData.isError() ? View.VISIBLE : View.GONE);
-        holder.layoutMyMessageShape.setBackgroundResource(messageData.isError() ? R.drawable.my_error_message_background : R.drawable.selector_my_message_background);
         if (messageData.isMine()) {
             holder.textViewMyMessage.setText(messageData.getMessage());
             holder.layoutMyMessageShape.setSelected(messageData.isSelected());

@@ -57,7 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="40dp"
-                android:background="@drawable/selector_partner_message_background"
+                android:background="@drawable/message_background"
+                android:backgroundTint="@color/selector_partner_message_background_tint"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,7 +87,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginBottom="2dp"
-                    android:background="@drawable/selector_my_message_background">
+                    android:background="@drawable/message_background"
+                    android:backgroundTint="@color/selector_my_message_background_tint">
 
                     <TextView
                         android:id="@+id/textViewMyMessage"

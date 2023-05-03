@@ -24,19 +24,15 @@
     <color name="secondary">#008375</color>
     <color name="tertiary">#7F59C3</color>
 
-    <color name="_bg__screen_3_color">#FFFFFF</color>
     <color name="type_a_message_color">#72777A</color>
     <color name="background_color">#303437</color>
     <color name="edit_text_background_color">#cecece</color>
-    <color name="_9_41_color">#090A0A</color>
 
     <color name="message_background_color">#ededed</color>
-    <color name="message_background_sender_color">#AFCFFF</color>
+    <color name="my_message_background_color">#BFD4F3</color>
     <color name="message_background_error_color">#FFA4C2</color>
     <color name="selected_message_background_color">#5A9AFB</color>
 
-    <color name="background_ek1_color">#F2F8FF</color>
-    <color name="fitbot_ek1_color">#202325</color>
     <color name="text_dark_color">#202325</color>
     <color name="text_light_color">#FFFFFF</color>
     <color name="ellipse_12_green">#7CDE86</color>
