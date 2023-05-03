@@ -102,10 +102,14 @@ public class FragmentAssistant extends Fragment {
         messageDataAdapter.setOnSubItemLongClickListener(new OnSubItemLongClickListener() {
             @Override
             public void onSubItemLongClick(int position, String text) {
-                hideMessageSuggestion();
-                setAdvanceMenuVisibility(true);
-                messageDataAdapter.select(position);
-                updateSelectedItemCount();
+                if (isAdvanceMode) {
+                    exitAdvanceMenu();
+                } else {
+                    hideMessageSuggestion();
+                    setAdvanceMenuVisibility(true);
+                    messageDataAdapter.select(position);
+                    updateSelectedItemCount();
+                }
             }
         });
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

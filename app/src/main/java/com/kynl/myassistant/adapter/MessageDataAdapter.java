@@ -69,7 +69,6 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             holder.layoutPartnerMessagePosition.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e(TAG, "onClick: isadvancemode " + isAdvanceMode);
                     if (isAdvanceMode) {
                         onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
                     } else {
@@ -160,23 +159,18 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
 
     public int deleteSelectedItem() {
         int count = 0;
-        while (true) {
-            int position = 0;
-            boolean existSelectedItem = false;
-            for (position = 0; position < messageDataList.size(); position++) {
-                if (messageDataList.get(position).isSelected()) {
-                    count++;
-                    existSelectedItem = true;
-                    break;
-                }
-            }
-            if (existSelectedItem) {
+        int position = 0;
+        for (position = messageDataList.size() - 1; position >= 0; position--) {
+            if (messageDataList.get(position).isSelected()) {
+                count++;
                 messageDataList.remove(position);
                 notifyItemRemoved(position);
-            } else {
-                return count;
             }
         }
+        if (count > 0) {
+            notifyItemRangeChanged(position, messageDataList.size() - position);
+        }
+        return count;
     }
 
     public String getFirstSelectedItemString() {
