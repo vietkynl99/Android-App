@@ -26,7 +26,6 @@ import static com.kynl.myassistant.database.DatabaseHelper.SQL_MESSAGE_TABLE;
 public class DatabaseManager {
     private final String TAG = "DatabaseManager";
     private static DatabaseManager instance;
-    private Context context;
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase db;
 
@@ -42,7 +41,6 @@ public class DatabaseManager {
 
     public void init(Context context) {
         Log.i(TAG, "init: ");
-        this.context = context;
         databaseHelper = new DatabaseHelper(context);
         db = databaseHelper.getWritableDatabase();
     }
@@ -56,17 +54,17 @@ public class DatabaseManager {
         db.close();
     }
 
-    public long insertMessage(MessageData messageData) {
+    public void insertMessage(MessageData messageData) {
         if (databaseHelper == null || db == null) {
             Log.e(TAG, "insertMessage: object is null");
-            return -1;
+            return;
         }
         ContentValues values = new ContentValues();
         values.put(SQL_MESSAGE_COLUMN_MINE, messageData.isMine() ? 1 : 0);
         values.put(SQL_MESSAGE_COLUMN_ERROR, messageData.isError() ? 1 : 0);
         values.put(SQL_MESSAGE_COLUMN_MESSAGE, messageData.getMessage());
         values.put(SQL_MESSAGE_COLUMN_DATETIME, messageData.getDateTimeStringISO8601());
-        return db.insert(SQL_MESSAGE_TABLE, null, values);
+        db.insert(SQL_MESSAGE_TABLE, null, values);
     }
 
     public List<MessageData> readSavedMessageList() {
@@ -91,7 +89,7 @@ public class DatabaseManager {
             Date dateTime = null;
             try {
                 dateTime = dateFormat.parse(datetimeString);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             if (dateTime != null) {
                 messageDataList.add(new MessageData(mine, error, message, dateTime));
@@ -106,7 +104,7 @@ public class DatabaseManager {
         return messageDataList;
     }
 
-    public int removeMessage(MessageData messageData) {
+    public void removeMessage(MessageData messageData) {
         // Find the last element that satisfies the condition
         int count = 0;
         String[] columns = {SQL_MESSAGE_COLUMN_ID};
@@ -128,6 +126,5 @@ public class DatabaseManager {
         if (count != 1) {
             Log.e(TAG, "removeMessage: Error cannot delete message:" + messageData.getAllDataAsString());
         }
-        return count;
     }
 }
