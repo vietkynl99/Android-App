@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_gradient_background"
     android:orientation="vertical"
-    tools:context=".fragment.FragmentHome">
+    tools:context=".Settings">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -23,9 +23,10 @@
                 android:layout_height="27dp"
                 android:layout_marginStart="20dp"
                 android:background="@drawable/transparent_rectangle"
-                android:tint="@color/white"
+                android:contentDescription="@string/content_description"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
+                android:tint="@color/white"
                 app:srcCompat="@drawable/back_b_50" />
 
             <TextView

@@ -10,7 +10,7 @@
     <FrameLayout
         android:layout_width="155dp"
         android:layout_height="300dp"
-        android:layout_gravity="right">
+        android:layout_gravity="end">
 
         <com.marcinmoskala.arcseekbar.ArcSeekBar
 

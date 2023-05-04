@@ -195,8 +195,6 @@
             android:id="@+id/messageRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
             android:scrollbars="vertical"
             tools:listitem="@layout/message_recycler_view_item" />
     </LinearLayout>
