@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -24,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kynl.myassistant.adapter.MenuRecyclerViewAdapter;
-import com.kynl.myassistant.adapter.OnSubItemClickListener;
 import com.kynl.myassistant.database.DatabaseManager;
 import com.kynl.myassistant.fragment.FragmentRoom4;
 import com.kynl.myassistant.fragment.FragmentRoom1;
@@ -32,7 +30,6 @@ import com.kynl.myassistant.fragment.FragmentRoom3;
 import com.kynl.myassistant.fragment.FragmentRoom5;
 import com.kynl.myassistant.fragment.FragmentRoom2;
 import com.kynl.myassistant.model.MenuElement;
-import com.kynl.myassistant.model.MessageManager;
 import com.kynl.myassistant.service.SocketService;
 
 import java.util.ArrayList;
@@ -47,7 +44,6 @@ import static com.kynl.myassistant.common.CommonUtils.UI_EXIT_BUBBLE_CHAT;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
-    private String serverAddress;
     private boolean weatherForecastEnable;
     private boolean socketStatus = false;
     private BroadcastReceiver mBroadcastReceiver;
@@ -56,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private ViewGroup bubbleChatLayout;
 
     private List<MenuElement> menuElementList;
-    private List<Integer> menuElementIconIdList;
     MenuRecyclerViewAdapter menuRecyclerViewAdapter;
 
     private FragmentManager fragmentManager;
@@ -86,18 +81,13 @@ public class MainActivity extends AppCompatActivity {
         menuElementList.add(new MenuElement("Room 4", R.drawable.diningtable, FragmentRoom4.class.getName()));
         menuElementList.add(new MenuElement("Room 5", R.drawable.bedroom, FragmentRoom5.class.getName()));
 
-        menuElementIconIdList = new ArrayList<>();
+        List<Integer> menuElementIconIdList = new ArrayList<>();
         for (MenuElement menuElement : menuElementList) {
             menuElementIconIdList.add(menuElement.getIconId());
         }
 
         menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuElementIconIdList);
-        menuRecyclerViewAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
-            @Override
-            public void onSubItemClick(int position, String text) {
-                changeFragment(position);
-            }
-        });
+        menuRecyclerViewAdapter.setOnSubItemClickListener((position, text) -> changeFragment(position));
         RecyclerView menuRecyclerView = findViewById(R.id.menuRecyclerView);
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         menuRecyclerView.setAdapter(menuRecyclerViewAdapter);
@@ -109,37 +99,19 @@ public class MainActivity extends AppCompatActivity {
         // Bubble chat
         bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
         CardView assistantIconView = findViewById(R.id.assistantIconView);
-        assistantIconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard();
-                toggleBubbleChatVisibility();
-            }
+        assistantIconView.setOnClickListener(v -> {
+            hideKeyboard();
+            toggleBubbleChatVisibility();
         });
 
         // go to setting
         FrameLayout settingsButton = findViewById(R.id.settingsButton);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bubbleChatLayout.getVisibility() != View.VISIBLE) {
-                    Intent intent = new Intent(MainActivity.this, Settings.class);
-                    startActivity(intent);
-                } else {
-                    hideKeyboard();
-                }
-            }
-        });
-
-        // hide keyboard
-        ViewGroup mainLayout = findViewById(R.id.mainLayout);
-        mainLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboard();
-                }
-                return false;
+        settingsButton.setOnClickListener(v -> {
+            if (bubbleChatLayout.getVisibility() != View.VISIBLE) {
+                Intent intent1 = new Intent(MainActivity.this, Settings.class);
+                startActivity(intent1);
+            } else {
+                hideKeyboard();
             }
         });
     }
@@ -160,24 +132,16 @@ public class MainActivity extends AppCompatActivity {
                             if (status >= 0) {
                                 Log.e(TAG, "onReceive: get socket status=" + status);
                                 socketStatus = status == 1;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (serverWarningPanel != null) {
-                                            serverWarningPanel.setVisibility(socketStatus ? View.GONE : View.VISIBLE);
-                                        }
+                                runOnUiThread(() -> {
+                                    if (serverWarningPanel != null) {
+                                        serverWarningPanel.setVisibility(socketStatus ? View.GONE : View.VISIBLE);
                                     }
                                 });
                             }
                             break;
                         }
                         case UI_EXIT_BUBBLE_CHAT: {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setBubbleChatVisibility(false);
-                                }
-                            });
+                            runOnUiThread(() -> hideBubbleChatVisibility());
                             break;
                         }
                         default:
@@ -211,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private void setBubbleChatVisibility(boolean visibility) {
+    private void hideBubbleChatVisibility() {
         if (bubbleChatLayout != null) {
-            bubbleChatLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
+            bubbleChatLayout.setVisibility(View.GONE);
         }
     }
 
@@ -231,14 +195,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void readOldSetting() {
         SharedPreferences prefs = getSharedPreferences(SOCKET_PREFERENCES, Context.MODE_PRIVATE);
-        // serverAddress
-        String address = prefs.getString("serverAddress", null);
-        if (address != null) {
-            serverAddress = address;
-        } else {
-            serverAddress = "";
-        }
-        // weatherForecast
         weatherForecastEnable = prefs.getBoolean("weatherForecastEnable", false);
     }
 
