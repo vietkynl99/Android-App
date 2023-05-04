@@ -15,23 +15,11 @@ public class MenuElement {
         return iconId;
     }
 
-    public void setIconId(int iconId) {
-        this.iconId = iconId;
-    }
-
     public String getFragmentClassName() {
         return fragmentClassName;
     }
 
-    public void setFragmentClassName(String fragmentClassName) {
-        this.fragmentClassName = fragmentClassName;
-    }
-
     public String getItemName() {
         return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
     }
 }
