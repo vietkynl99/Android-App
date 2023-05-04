@@ -17,21 +17,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-            <FrameLayout
+            <ImageButton
                 android:id="@+id/backButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp">
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="18dp"
-                    android:layout_height="12dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/content_description"
-                    android:src="@drawable/vector_back"
-                    android:tint="#FFFFFF" />
-            </FrameLayout>
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/button_transparent_background"
+                android:tint="@color/white"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/back_b_50" />
 
             <TextView
                 android:id="@+id/textView2"
