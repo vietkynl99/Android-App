@@ -32,6 +32,7 @@
                 android:layout_height="27dp"
                 android:layout_gravity="center"
                 android:background="@drawable/transparent_rectangle"
+                android:contentDescription="@string/content_description"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/back_b_50" />
@@ -87,7 +88,7 @@
                         android:id="@+id/activeStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="0dp"
                         android:text="@string/active_status_disconnected"
                         android:textColor="@color/always_active_ek1_color"
@@ -104,6 +105,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/transparent_rectangle"
+                android:contentDescription="@string/content_description"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ellipsis_b_50" />
@@ -194,6 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
+            android:focusable="true"
             android:scrollbars="vertical"
             tools:listitem="@layout/message_recycler_view_item" />
     </LinearLayout>
@@ -228,61 +231,54 @@
         android:paddingBottom="5dp">
 
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/input"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@drawable/rounded_rectangle">
+            android:background="@drawable/rounded_rectangle"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp">
 
 
             <EditText
                 android:id="@+id/messageEditText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
+                android:autofillHints="message"
                 android:background="@drawable/transparent_rectangle"
                 android:ems="10"
                 android:fontFamily="DM Sans"
                 android:gravity="start|top"
                 android:hint="@string/type_a_message"
                 android:inputType="textMultiLine"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <RelativeLayout
-                android:id="@+id/icon_linear_microphone_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="20dp">
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/transparent_rectangle"
+                android:contentDescription="@string/content_description"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/messageEditText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/micro" />
 
-
-                <RelativeLayout
-                    android:id="@+id/microphone_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="2dp">
-
-                    <ImageView
-                        android:id="@+id/vector"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:contentDescription="@string/content_description"
-                        android:src="@drawable/micro" />
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
             android:id="@+id/sendMessageButton"
