@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.model.MessageData;
+import com.kynl.myassistant.model.MessageManager;
 
 import java.util.Date;
 import java.util.List;
@@ -152,22 +153,6 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
             if (messageDataList.get(position).isSelected()) {
                 count++;
             }
-        }
-        return count;
-    }
-
-    public int deleteSelectedItem() {
-        int count = 0;
-        int position = 0;
-        for (position = messageDataList.size() - 1; position >= 0; position--) {
-            if (messageDataList.get(position).isSelected()) {
-                count++;
-                messageDataList.remove(position);
-                notifyItemRemoved(position);
-            }
-        }
-        if (count > 0) {
-            notifyItemRangeChanged(position, messageDataList.size() - position);
         }
         return count;
     }

@@ -13,4 +13,9 @@ public class CommonUtils {
     public static final String SOCKET_REQ_UPDATE_DEVICE = "socket_req_update_device";
     //    from socket service to another module
     public static final String SOCKET_ACTION_DATA = "socket_action_data";
+
+    public static final String DATE_FORMAT_ISO8601 = "yyyy-MM-dd HH:mm:ss";
+
+    public static final int LIMITED_DOWNLOAD_MESSAGES = 20;
+
 }

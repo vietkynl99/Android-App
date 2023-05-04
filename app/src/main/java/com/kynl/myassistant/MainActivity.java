@@ -25,12 +25,14 @@ import android.widget.TextView;
 
 import com.kynl.myassistant.adapter.MenuRecyclerViewAdapter;
 import com.kynl.myassistant.adapter.OnSubItemClickListener;
+import com.kynl.myassistant.database.DatabaseManager;
 import com.kynl.myassistant.fragment.FragmentRoom4;
 import com.kynl.myassistant.fragment.FragmentRoom1;
 import com.kynl.myassistant.fragment.FragmentRoom3;
 import com.kynl.myassistant.fragment.FragmentRoom5;
 import com.kynl.myassistant.fragment.FragmentRoom2;
 import com.kynl.myassistant.model.MenuElement;
+import com.kynl.myassistant.model.MessageManager;
 import com.kynl.myassistant.service.SocketService;
 
 import java.util.ArrayList;
@@ -184,10 +186,11 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         super.onDestroy();
         Log.e(TAG, "onDestroy: ");
-
         // Stop service
         Intent intent = new Intent(this, SocketService.class);
         stopService(intent);
+        // Close database
+        DatabaseManager.getInstance().close();
     }
 
     @Override

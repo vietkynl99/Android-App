@@ -67,9 +67,6 @@ public class FragmentAssistant extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
-
-        MessageManager.getInstance().init();
-
     }
 
     @Override
@@ -134,8 +131,9 @@ public class FragmentAssistant extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int count = messageDataAdapter.deleteSelectedItem();
+                int count = MessageManager.getInstance().deleteSelectedItem();
                 if (count > 0) {
+                    messageDataAdapter.notifyDataSetChanged();
                     String message = "Delete " + count + " message";
                     if (count > 1) {
                         message += "s";
@@ -222,6 +220,10 @@ public class FragmentAssistant extends Fragment {
                 exitAdvanceMenu();
             }
         });
+
+
+        // scroll
+        scrollMessageToBottom();
 
         return view;
     }
@@ -393,14 +395,20 @@ public class FragmentAssistant extends Fragment {
         }
     }
 
+    public void scrollMessageToBottom() {
+        if (messageDataAdapter != null && messageRecyclerView != null) {
+            if (messageDataAdapter.getItemCount() > 0) {
+                messageRecyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
+            }
+        }
+    }
+
     public void sendMessage(String message) {
         Log.d(TAG, "send message: " + message);
         MessageManager.getInstance().sendMessage(!socketStatus, message);
         // update to view
         messageDataAdapter.updateItemInserted();
-        if (messageDataAdapter.getItemCount() > 0) {
-            messageRecyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
-        }
+        scrollMessageToBottom();
         // send message to server
         if (socketStatus) {
             sendMessageToServer(message);
@@ -411,8 +419,6 @@ public class FragmentAssistant extends Fragment {
         MessageManager.getInstance().replyMessage(message);
         // update to view
         messageDataAdapter.updateItemInserted();
-        if (messageDataAdapter.getItemCount() > 0) {
-            messageRecyclerView.smoothScrollToPosition(messageDataAdapter.getItemCount() - 1);
-        }
+        scrollMessageToBottom();
     }
 }

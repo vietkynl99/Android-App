@@ -38,7 +38,7 @@ import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
 
 public class SocketService extends Service {
     private final String TAG = "SocketService";
-    private String serverAddressDefault = "http://192.168.100.198";
+    private final String serverAddressDefault = "https://kynl-web.onrender.com/";
     private String serverAddress = "";
     private Socket socket;
     private boolean socketStatus = false;
@@ -94,7 +94,7 @@ public class SocketService extends Service {
     private void sendToServer(String message) {
         if (socket != null) {
             if (socketStatus) {
-                Log.e(TAG, "sendToServer: [MD_message] [" + message + "]");
+                Log.d(TAG, "sendToServer: [MD_message] [" + message + "]");
                 socket.emit("MD_message", message);
             } else {
                 Log.e(TAG, "sendToServer: server is disconnected. Cannot send message!");
@@ -105,7 +105,7 @@ public class SocketService extends Service {
     private void updateDataToServer(String data) {
         if (socket != null) {
             if (socketStatus) {
-                Log.e(TAG, "sendToServer: [MD_data] [" + data + "]");
+                Log.d(TAG, "sendToServer: [MD_data] [" + data + "]");
                 socket.emit("MD_data", data);
             } else {
                 Log.e(TAG, "sendToServer: server is disconnected. Cannot send message!");
@@ -218,13 +218,12 @@ public class SocketService extends Service {
             socket.on("MD_message_res", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    Log.e(TAG, "call: [MD_message_res]" + args.length);
                     if (args.length > 0) {
                         JSONObject data = (JSONObject) args[0];
                         try {
                             String message = data.getString("message");
                             sendMessageToUI(message);
-                            Log.e(TAG, "call: message->" + message);
+                            Log.d(TAG, "call: get message: " + message);
                         } catch (JSONException e) {
                             Log.e(TAG, "call: MD_message_res error : " + e.getCause());
                         }
@@ -248,7 +247,7 @@ public class SocketService extends Service {
 
         String address = prefs.getString("serverAddress", null);
         if (address != null) {
-            Log.e(TAG, "readOldSetting: server address " + address);
+            Log.i(TAG, "readOldSetting: server address " + address);
             serverAddress = address;
         } else {
             Log.e(TAG, "readOldSetting: Cannot read server address from old setting. Set default address " + serverAddressDefault);
