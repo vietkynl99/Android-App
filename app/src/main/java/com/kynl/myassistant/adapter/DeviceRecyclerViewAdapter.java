@@ -3,7 +3,6 @@ package com.kynl.myassistant.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -16,8 +15,7 @@ import com.kynl.myassistant.model.Device;
 import java.util.List;
 
 public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecyclerViewAdapter.CustomViewHolder> {
-    private final String TAG = "DeviceRecyclerViewAdapter";
-    private List<Device> deviceList;
+    private final List<Device> deviceList;
     private OnSubItemClickListener onSubItemClickListener;
 
     public DeviceRecyclerViewAdapter(List<Device> deviceList) {
@@ -28,18 +26,15 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_recycler_view_item, parent, false);
-        return new CustomViewHolder(view, onSubItemClickListener);
+        return new CustomViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         holder.bind(position, deviceList.get(position).getName(), deviceList.get(position).getState());
-        holder.deviceState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (onSubItemClickListener != null) {
-                    onSubItemClickListener.onSubItemClick(position, isChecked ? "1" : "0");
-                }
+        holder.deviceState.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (onSubItemClickListener != null) {
+                onSubItemClickListener.onSubItemClick(position, isChecked ? "1" : "0");
             }
         });
     }
@@ -53,15 +48,13 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         this.onSubItemClickListener = onSubItemClickListener;
     }
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
-        private OnSubItemClickListener onSubItemClickListener;
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
         View itemView;
         TextView deviceName;
         Switch deviceState;
 
-        public CustomViewHolder(@NonNull View itemView, OnSubItemClickListener onSubItemClickListener) {
+        public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.onSubItemClickListener = onSubItemClickListener;
             this.itemView = itemView;
             deviceName = itemView.findViewById(R.id.deviceName);
             deviceState = itemView.findViewById(R.id.deviceState);
