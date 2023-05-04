@@ -61,7 +61,6 @@ public class DatabaseManager {
             Log.e(TAG, "insertMessage: object is null");
             return -1;
         }
-        Log.e(TAG, "insertMessage: " + messageData.getMessage());
         ContentValues values = new ContentValues();
         values.put(SQL_MESSAGE_COLUMN_MINE, messageData.isMine() ? 1 : 0);
         values.put(SQL_MESSAGE_COLUMN_ERROR, messageData.isError() ? 1 : 0);
