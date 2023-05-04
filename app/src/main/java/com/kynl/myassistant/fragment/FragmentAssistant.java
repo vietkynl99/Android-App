@@ -1,5 +1,6 @@
 package com.kynl.myassistant.fragment;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -27,14 +28,8 @@ import android.widget.Toast;
 
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.adapter.MessageDataAdapter;
-import com.kynl.myassistant.adapter.OnSubItemClickListener;
-import com.kynl.myassistant.adapter.OnSubItemLongClickListener;
 import com.kynl.myassistant.adapter.SuggestionDataAdapter;
-import com.kynl.myassistant.model.MessageData;
 import com.kynl.myassistant.model.MessageManager;
-import com.kynl.myassistant.service.SocketService;
-
-import java.util.List;
 
 import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_GET_MESSAGE_FROM_SERVER;
@@ -46,9 +41,8 @@ import static com.kynl.myassistant.common.CommonUtils.UI_EXIT_BUBBLE_CHAT;
 public class FragmentAssistant extends Fragment {
 
     private final String TAG = this.getClass().getName();
-    private RecyclerView messageRecyclerView, suggestionRecyclerView;
+    private RecyclerView messageRecyclerView;
     private MessageDataAdapter messageDataAdapter;
-    private SuggestionDataAdapter suggestionDataAdapter;
     private LinearLayout suggestionArea;
     private boolean socketStatus = false;
     private boolean isAdvanceMode = false;
@@ -57,7 +51,7 @@ public class FragmentAssistant extends Fragment {
 
     private TextView selectedItemCount;
     private ViewGroup navBarNormal, navBarAdvance;
-    private ImageButton navBarAdvanceCloseButton, copyButton, deleteButton;
+    private ImageButton copyButton;
     private View indicatorLightStatus;
     private TextView activeStatus;
     private EditText messageEditText;
@@ -77,85 +71,75 @@ public class FragmentAssistant extends Fragment {
         Log.d(TAG, "onCreateView: ");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assistant, container, false);
+        Activity activity = getActivity();
+        if (activity == null) {
+            Log.e(TAG, "onCreateView: getActivity null");
+            return view;
+        }
 
         navBarNormal = view.findViewById(R.id.navBarNormal);
         navBarAdvance = view.findViewById(R.id.navBarAdvance);
         selectedItemCount = view.findViewById(R.id.selectedItemCount);
         copyButton = view.findViewById(R.id.copyButton);
-        deleteButton = view.findViewById(R.id.deleteButton);
+        ImageButton deleteButton = view.findViewById(R.id.deleteButton);
         indicatorLightStatus = view.findViewById(R.id.indicatorLightStatus);
         activeStatus = view.findViewById(R.id.activeStatus);
 
         // message recyclerview
         messageRecyclerView = view.findViewById(R.id.messageRecyclerView);
         messageDataAdapter = new MessageDataAdapter(MessageManager.getInstance().getMessageDataList());
-        messageDataAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
-            @Override
-            public void onSubItemClick(int position, String text) {
-                if (isAdvanceMode) {
-                    messageDataAdapter.toggleSelect(position);
-                    updateSelectedItemCount();
-                }
+        messageDataAdapter.setOnSubItemClickListener((position, text) -> {
+            if (isAdvanceMode) {
+                messageDataAdapter.toggleSelect(position);
+                updateSelectedItemCount();
             }
         });
-        messageDataAdapter.setOnSubItemLongClickListener(new OnSubItemLongClickListener() {
-            @Override
-            public void onSubItemLongClick(int position, String text) {
-                if (isAdvanceMode) {
-                    exitAdvanceMenu();
-                } else {
-                    hideMessageSuggestion();
-                    setAdvanceMenuVisibility(true);
-                    messageDataAdapter.select(position);
-                    updateSelectedItemCount();
-                }
+        messageDataAdapter.setOnSubItemLongClickListener((position, text) -> {
+            if (isAdvanceMode) {
+                exitAdvanceMenu();
+            } else {
+                hideMessageSuggestion();
+                setAdvanceMenuVisibility(true);
+                messageDataAdapter.select(position);
+                updateSelectedItemCount();
             }
         });
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         messageRecyclerView.setAdapter(messageDataAdapter);
 
         // copy message
-        copyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = messageDataAdapter.getFirstSelectedItemString();
-                if (!message.isEmpty()) {
-                    ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("label", message);
-                    clipboard.setPrimaryClip(clip);
-                    Toast.makeText(getContext(), "Copied to clipboard!", Toast.LENGTH_SHORT).show();
-                    exitAdvanceMenu();
-                }
+        copyButton.setOnClickListener(v -> {
+            String message = messageDataAdapter.getFirstSelectedItemString();
+            if (!message.isEmpty()) {
+                ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", message);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getContext(), "Copied to clipboard!", Toast.LENGTH_SHORT).show();
+                exitAdvanceMenu();
             }
         });
 
         // delete message
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int count = MessageManager.getInstance().deleteSelectedItem();
-                if (count > 0) {
-                    messageDataAdapter.notifyDataSetChanged();
-                    String message = "Delete " + count + " message";
-                    if (count > 1) {
-                        message += "s";
-                    }
-                    message += "!";
-                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    exitAdvanceMenu();
+        deleteButton.setOnClickListener(v -> {
+            int count = MessageManager.getInstance().deleteSelectedItem();
+            if (count > 0) {
+                messageDataAdapter.notifyDataSetChanged();
+                String message = "Delete " + count + " message";
+                if (count > 1) {
+                    message += "s";
                 }
+                message += "!";
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                exitAdvanceMenu();
             }
         });
 
         // suggestion message recyclerview
-        suggestionRecyclerView = view.findViewById(R.id.suggestionRecyclerView);
-        suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList());
-        suggestionDataAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
-            @Override
-            public void onSubItemClick(int position, String text) {
-                sendMessage(text);
-                hideMessageSuggestion();
-            }
+        RecyclerView suggestionRecyclerView = view.findViewById(R.id.suggestionRecyclerView);
+        SuggestionDataAdapter suggestionDataAdapter = new SuggestionDataAdapter(MessageManager.getInstance().getSuggestionDataList());
+        suggestionDataAdapter.setOnSubItemClickListener((position, text) -> {
+            sendMessage(text);
+            hideMessageSuggestion();
         });
         suggestionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         suggestionRecyclerView.setAdapter(suggestionDataAdapter);
@@ -164,73 +148,47 @@ public class FragmentAssistant extends Fragment {
         // edit text and send button
         ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
         messageEditText = view.findViewById(R.id.messageEditText);
-        sendMessageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = messageEditText.getText().toString().trim();
-                if (!text.isEmpty()) {
-                    sendMessage(text);
-                }
-                messageEditText.getText().clear();
+        sendMessageButton.setOnClickListener(v -> {
+            String text = messageEditText.getText().toString().trim();
+            if (!text.isEmpty()) {
+                sendMessage(text);
             }
+            messageEditText.getText().clear();
         });
 
-        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    exitAdvanceMenu();
-                    showMessageSuggestion();
-                }
-            }
-        });
-        messageEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        messageEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
                 exitAdvanceMenu();
+                showMessageSuggestion();
             }
         });
+        messageEditText.setOnClickListener(v -> exitAdvanceMenu());
 
         // exit
         ImageButton backToMainUIButton = view.findViewById(R.id.backToMainUIButton);
-        backToMainUIButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendBackToMainUIRequest();
-            }
+        backToMainUIButton.setOnClickListener(v -> {
+            hideKeyboard();
+            sendBackToMainUIRequest();
         });
 
         // hide keyboard
         ViewGroup navBar = view.findViewById(R.id.navBar);
-        navBar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboard();
-                    hideMessageSuggestion();
-                }
-                return false;
-            }
+        navBar.setOnClickListener(v -> {
+            hideKeyboard();
+            hideMessageSuggestion();
         });
-        messageRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboard();
-                    hideMessageSuggestion();
-                }
-                return false;
+
+        messageRecyclerView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                hideKeyboard();
+                hideMessageSuggestion();
             }
+            return false;
         });
 
         // advance menu
-        navBarAdvanceCloseButton = view.findViewById(R.id.navBarAdvanceCloseButton);
-        navBarAdvanceCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exitAdvanceMenu();
-            }
-        });
+        ImageButton navBarAdvanceCloseButton = view.findViewById(R.id.navBarAdvanceCloseButton);
+        navBarAdvanceCloseButton.setOnClickListener(v -> exitAdvanceMenu());
 
 
         // scroll
@@ -244,51 +202,47 @@ public class FragmentAssistant extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume: ");
 
-        // register broadcast
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String event = intent.getStringExtra("event");
-                if (event != null) {
-                    switch (event) {
-                        case SOCKET_STATUS:
-                            int status = intent.getIntExtra("status", -1);
-                            if (status >= 0) {
-                                Log.e(TAG, "onReceive: get socket status=" + status);
-                                socketStatus = status == 1;
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            // register broadcast
+            mBroadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String event = intent.getStringExtra("event");
+                    if (event != null) {
+                        switch (event) {
+                            case SOCKET_STATUS:
+                                int status = intent.getIntExtra("status", -1);
+                                if (status >= 0) {
+                                    Log.e(TAG, "onReceive: get socket status=" + status);
+                                    socketStatus = status == 1;
+                                    activity.runOnUiThread(() -> {
                                         updateServerStatus();
                                         showMessageSuggestion();
-                                    }
-                                });
-                            }
-                            break;
-                        case SOCKET_GET_MESSAGE_FROM_SERVER:
-                            String message = intent.getStringExtra("message");
-                            if (message != null) {
-                                Log.e(TAG, "onReceive: get message from server: " + message);
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+                                    });
+                                }
+                                break;
+                            case SOCKET_GET_MESSAGE_FROM_SERVER:
+                                String message = intent.getStringExtra("message");
+                                if (message != null) {
+                                    Log.e(TAG, "onReceive: get message from server: " + message);
+                                    activity.runOnUiThread(() -> {
                                         replyMessage(message);
                                         showMessageSuggestion();
-                                    }
-                                });
-                            }
-                            break;
-                        default:
-                            break;
+                                    });
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
-            }
-        };
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mBroadcastReceiver, new IntentFilter(BROADCAST_ACTION));
-
-        // send request to socket service
-        requestSocketStatusFromService();
+            };
+            LocalBroadcastManager.getInstance(activity)
+                    .registerReceiver(mBroadcastReceiver, new IntentFilter(BROADCAST_ACTION));
+            // send request to socket service
+            requestSocketStatusFromService();
+        }
     }
 
     @Override
@@ -306,7 +260,10 @@ public class FragmentAssistant extends Fragment {
     @Override
     public void onPause() {
         Log.d(TAG, "onPause: ");
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+        Activity activity = getActivity();
+        if (activity != null) {
+            LocalBroadcastManager.getInstance(activity).unregisterReceiver(mBroadcastReceiver);
+        }
         super.onPause();
     }
 
@@ -368,39 +325,51 @@ public class FragmentAssistant extends Fragment {
     }
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            if (imm.isAcceptingText()) {
-                View focusView = getActivity().getCurrentFocus();
-                if (focusView != null) {
-                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+        Activity activity = getActivity();
+        if (activity != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                if (imm.isAcceptingText()) {
+                    View focusView = getActivity().getCurrentFocus();
+                    if (focusView != null) {
+                        imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                    }
                 }
             }
-        }
-        if (messageEditText != null) {
-            if (messageEditText.isFocused()) {
-                messageEditText.clearFocus();
+            if (messageEditText != null) {
+                if (messageEditText.isFocused()) {
+                    messageEditText.clearFocus();
+                }
             }
         }
     }
 
     private void sendBackToMainUIRequest() {
-        Intent intent = new Intent(BROADCAST_ACTION);
-        intent.putExtra("event", UI_EXIT_BUBBLE_CHAT);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+        Context context = getContext();
+        if (context != null) {
+            Intent intent = new Intent(BROADCAST_ACTION);
+            intent.putExtra("event", UI_EXIT_BUBBLE_CHAT);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
     }
 
     private void requestSocketStatusFromService() {
-        Intent intent = new Intent(BROADCAST_ACTION);
-        intent.putExtra("event", SOCKET_REQ_STATUS);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+        Context context = getContext();
+        if (context != null) {
+            Intent intent = new Intent(BROADCAST_ACTION);
+            intent.putExtra("event", SOCKET_REQ_STATUS);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
     }
 
     private void sendMessageToServer(String message) {
-        Intent intent = new Intent(BROADCAST_ACTION);
-        intent.putExtra("event", SOCKET_REQ_SEND_MESS);
-        intent.putExtra("message", message);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+        Context context = getContext();
+        if (context != null) {
+            Intent intent = new Intent(BROADCAST_ACTION);
+            intent.putExtra("event", SOCKET_REQ_SEND_MESS);
+            intent.putExtra("message", message);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
     }
 
     private void updateServerStatus() {
