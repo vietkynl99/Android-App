@@ -38,10 +38,10 @@ import com.kynl.myassistant.service.SocketService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_DATA;
-import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_STATUS;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 String event = intent.getStringExtra("event");
                 if (event != null) {
                     switch (event) {
-                        case "status":
+                        case SOCKET_STATUS:
                             int status = intent.getIntExtra("status", -1);
                             if (status >= 0) {
                                 Log.e(TAG, "onReceive: get socket status=" + status);
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mBroadcastReceiver, new IntentFilter(SOCKET_ACTION_DATA));
+                .registerReceiver(mBroadcastReceiver, new IntentFilter(BROADCAST_ACTION));
 
         // send request to socket service
         requestSocketStatusFromService();
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestSocketStatusFromService() {
-        Intent intent = new Intent(SOCKET_ACTION_REQ);
+        Intent intent = new Intent(BROADCAST_ACTION);
         intent.putExtra("event", SOCKET_REQ_STATUS);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }

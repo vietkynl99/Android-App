@@ -27,14 +27,14 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_DATA;
-import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_GET_MESSAGE_FROM_SERVER;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_CHANGE_ADDRESS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_SEND_MESS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
-
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_STATUS;
 
 public class SocketService extends Service {
     private final String TAG = "SocketService";
@@ -52,7 +52,7 @@ public class SocketService extends Service {
 
         // Register broadcast
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(socketStatusBroadcastReceiver,
-                new IntentFilter(SOCKET_ACTION_REQ));
+                new IntentFilter(BROADCAST_ACTION));
 
         // Connect to server
         connectToSocketSever();
@@ -77,16 +77,16 @@ public class SocketService extends Service {
     }
 
     private void sendSocketStatus() {
-        Intent intent = new Intent(SOCKET_ACTION_DATA);
-        intent.putExtra("event", "status");
+        Intent intent = new Intent(BROADCAST_ACTION);
+        intent.putExtra("event", SOCKET_STATUS);
         intent.putExtra("status", socketStatus ? 1 : 0);
         intent.putExtra("address", serverAddress);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
     private void sendMessageToUI(String message) {
-        Intent intent = new Intent(SOCKET_ACTION_DATA);
-        intent.putExtra("event", "message");
+        Intent intent = new Intent(BROADCAST_ACTION);
+        intent.putExtra("event", SOCKET_GET_MESSAGE_FROM_SERVER);
         intent.putExtra("message", message);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }

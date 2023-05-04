@@ -25,7 +25,7 @@ import com.larswerkman.holocolorpicker.OpacityBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
 
 
@@ -97,7 +97,7 @@ public class FragmentRoom1 extends Fragment {
         deviceRecyclerViewAdapter.setOnSubItemClickListener(new OnSubItemClickListener() {
             @Override
             public void onSubItemClick(int position, String text) {
-                Intent intent = new Intent(SOCKET_ACTION_REQ);
+                Intent intent = new Intent(BROADCAST_ACTION);
                 intent.putExtra("event", SOCKET_REQ_UPDATE_DEVICE);
                 intent.putExtra("name", deviceList.get(position).getName());
                 intent.putExtra("type", "switch");

@@ -30,7 +30,7 @@ import com.kynl.myassistant.service.SocketService;
 
 import java.util.Set;
 
-import static com.kynl.myassistant.common.CommonUtils.SOCKET_ACTION_REQ;
+import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_CHANGE_ADDRESS;
 
@@ -134,7 +134,7 @@ public class Settings extends AppCompatActivity {
                 if (!text.isEmpty()) {
                     serverAddress = text;
                     saveOldSetting();
-                    Intent intent = new Intent(SOCKET_ACTION_REQ);
+                    Intent intent = new Intent(BROADCAST_ACTION);
                     intent.putExtra("event", SOCKET_REQ_CHANGE_ADDRESS);
                     intent.putExtra("address", text);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
