@@ -6,26 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.kynl.myassistant.R;
-import com.kynl.myassistant.common.CommonUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
-
-import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_GET_MESSAGE_FROM_SERVER;
@@ -34,11 +25,11 @@ import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_CHANGE_ADDRESS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_SEND_MESS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_UPDATE_DEVICE;
+import static com.kynl.myassistant.common.CommonUtils.SOCKET_SERVER_DEFAULT_ADDRESS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_STATUS;
 
 public class SocketService extends Service {
     private final String TAG = "SocketService";
-    private final String serverAddressDefault = "https://kynl-web.onrender.com/";
     private String serverAddress = "";
     private Socket socket;
     private boolean socketStatus = false;
@@ -66,7 +57,7 @@ public class SocketService extends Service {
         socket.disconnect();
         try {
             unregisterReceiver(socketStatusBroadcastReceiver);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -113,7 +104,7 @@ public class SocketService extends Service {
         }
     }
 
-    private BroadcastReceiver socketStatusBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver socketStatusBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String event = intent.getStringExtra("event");
@@ -133,7 +124,7 @@ public class SocketService extends Service {
                         String address = intent.getStringExtra("address");
                         if (address != null) {
                             address = address.trim();
-                            if (!address.isEmpty() && address != serverAddress) {
+                            if (!address.isEmpty() && !address.equals(serverAddress)) {
                                 Log.i(TAG, "onReceive: Change server address to" + address);
                                 serverAddress = address;
                                 saveOldSetting();
@@ -143,7 +134,7 @@ public class SocketService extends Service {
                         break;
                     case SOCKET_REQ_UPDATE_DEVICE:
                         String type = intent.getStringExtra("type");
-                        if (type == "switch") {
+                        if (type.equals("switch")) {
                             String name = intent.getStringExtra("name");
                             int status = intent.getIntExtra("status", -1);
                             if (name != null && status >= 0) {
@@ -186,49 +177,37 @@ public class SocketService extends Service {
                 Log.e(TAG, "connectToSocketSever: Cannot connect to " + serverAddress + " : " + e.getCause());
             }
 
-            socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Exception e = (Exception) args[0];
+            socket.on(Socket.EVENT_CONNECT_ERROR, args -> {
+                Exception e = (Exception) args[0];
 //                e.printStackTrace();
-                    Log.e(TAG, "EVENT_CONNECT_ERROR Error cannot connect to  server " + serverAddress + " : " + e.getCause());
-                    socketStatus = false;
-                    sendSocketStatus();
-                }
+                Log.e(TAG, "EVENT_CONNECT_ERROR Error cannot connect to  server " + serverAddress + " : " + e.getCause());
+                socketStatus = false;
+                sendSocketStatus();
             });
 
-            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    socketStatus = true;
-                    Log.i(TAG, "EVENT_CONNECT Connected to server");
-                    sendSocketStatus();
-                }
+            socket.on(Socket.EVENT_CONNECT, args -> {
+                socketStatus = true;
+                Log.i(TAG, "EVENT_CONNECT Connected to server");
+                sendSocketStatus();
             });
 
-            socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.i(TAG, "EVENT_DISCONNECT Disconnected from server");
-                    socketStatus = false;
-                    sendSocketStatus();
-                }
+            socket.on(Socket.EVENT_DISCONNECT, args -> {
+                Log.i(TAG, "EVENT_DISCONNECT Disconnected from server");
+                socketStatus = false;
+                sendSocketStatus();
             });
 
-            socket.on("MD_message_res", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    if (args.length > 0) {
-                        JSONObject data = (JSONObject) args[0];
-                        try {
-                            String message = data.getString("message");
-                            sendMessageToUI(message);
-                            Log.d(TAG, "call: get message: " + message);
-                        } catch (JSONException e) {
-                            Log.e(TAG, "call: MD_message_res error : " + e.getCause());
-                        }
-
+            socket.on("MD_message_res", args -> {
+                if (args.length > 0) {
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        String message = data.getString("message");
+                        sendMessageToUI(message);
+                        Log.d(TAG, "call: get message: " + message);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "call: MD_message_res error : " + e.getCause());
                     }
+
                 }
             });
         }
@@ -250,8 +229,8 @@ public class SocketService extends Service {
             Log.i(TAG, "readOldSetting: server address " + address);
             serverAddress = address;
         } else {
-            Log.e(TAG, "readOldSetting: Cannot read server address from old setting. Set default address " + serverAddressDefault);
-            serverAddress = serverAddressDefault;
+            Log.e(TAG, "readOldSetting: Cannot read server address from old setting. Set default address " + SOCKET_SERVER_DEFAULT_ADDRESS);
+            serverAddress = SOCKET_SERVER_DEFAULT_ADDRESS;
             saveOldSetting();
         }
     }

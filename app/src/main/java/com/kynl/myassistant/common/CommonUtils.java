@@ -4,6 +4,9 @@ public class CommonUtils {
     // Shared Preferences
     public static final String SOCKET_PREFERENCES = "socket_preferences";
 
+    // Socket
+    public static final String SOCKET_SERVER_DEFAULT_ADDRESS = "https://kynl-web.onrender.com";
+
     // Broadcast
     public static final String BROADCAST_ACTION = "broadcast_action";
     public static final String SOCKET_REQ_STATUS = "socket_req_status";
