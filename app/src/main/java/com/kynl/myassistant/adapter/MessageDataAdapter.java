@@ -1,13 +1,10 @@
 package com.kynl.myassistant.adapter;
 
-import android.animation.FloatEvaluator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,14 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kynl.myassistant.R;
 import com.kynl.myassistant.model.MessageData;
-import com.kynl.myassistant.model.MessageManager;
 
 import java.util.Date;
 import java.util.List;
 
 public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.MessageDataViewHolder> {
-    private final String TAG = "MessageDataAdapter";
-    private List<MessageData> messageDataList;
+    private final List<MessageData> messageDataList;
     private OnSubItemClickListener onSubItemClickListener;
     private OnSubItemLongClickListener onSubItemLongClickListener;
     private boolean isAdvanceMode = false;
@@ -66,43 +61,31 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         holder.dateTimeText.setVisibility(visibility ? View.VISIBLE : View.GONE);
 
         if (onSubItemClickListener != null) {
-            holder.layoutPartnerMessagePosition.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isAdvanceMode) {
-                        onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
-                    } else {
-                        holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    }
+            holder.layoutPartnerMessagePosition.setOnClickListener(v -> {
+                if (isAdvanceMode) {
+                    onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
+                } else {
+                    holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
             });
-            holder.layoutMyMessageShape.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isAdvanceMode) {
-                        onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
-                    } else {
-                        holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    }
+            holder.layoutMyMessageShape.setOnClickListener(v -> {
+                if (isAdvanceMode) {
+                    onSubItemClickListener.onSubItemClick(position, messageData.getMessage());
+                } else {
+                    holder.dateTimeText.setVisibility(holder.dateTimeText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
             });
         }
 
         // advance menu
         if (onSubItemLongClickListener != null) {
-            holder.layoutPartnerMessagePosition.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onSubItemLongClickListener.onSubItemLongClick(position, messageData.getMessage());
-                    return true;
-                }
+            holder.layoutPartnerMessagePosition.setOnLongClickListener(v -> {
+                onSubItemLongClickListener.onSubItemLongClick(position, messageData.getMessage());
+                return true;
             });
-            holder.layoutMyMessageShape.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onSubItemLongClickListener.onSubItemLongClick(position, messageData.getMessage());
-                    return true;
-                }
+            holder.layoutMyMessageShape.setOnLongClickListener(v -> {
+                onSubItemLongClickListener.onSubItemLongClick(position, messageData.getMessage());
+                return true;
             });
         }
     }
@@ -172,10 +155,15 @@ public class MessageDataAdapter extends RecyclerView.Adapter<MessageDataAdapter.
         }
     }
 
-    class MessageDataViewHolder extends RecyclerView.ViewHolder {
-        private FrameLayout layoutAssistantAvatar;
-        private LinearLayout layoutPartnerMessagePosition, layoutMyMessagePosition, layoutMyMessageError, layoutMyMessageShape;
-        private TextView textViewPartnerMessage, textViewMyMessage, dateTimeText;
+    static class MessageDataViewHolder extends RecyclerView.ViewHolder {
+        private final FrameLayout layoutAssistantAvatar;
+        private final LinearLayout layoutPartnerMessagePosition;
+        private final LinearLayout layoutMyMessagePosition;
+        private final LinearLayout layoutMyMessageError;
+        private final LinearLayout layoutMyMessageShape;
+        private final TextView textViewPartnerMessage;
+        private final TextView textViewMyMessage;
+        private final TextView dateTimeText;
 
         public MessageDataViewHolder(@NonNull View itemView) {
             super(itemView);
