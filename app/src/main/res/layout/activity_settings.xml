@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center_horizontal"
-                    android:text="Viet Kynl"
+                    android:text="@string/sample_username"
                     android:textColor="@color/text_light_color"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:gravity="center_horizontal"
-                    android:text="vietkynl@gmail.com"
+                    android:text="@string/sample_email"
                     android:textColor="@color/gray"
                     android:textSize="12sp" />
 
@@ -169,7 +169,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Weather forecast"
+                        android:text="@string/settings_weather_forecast"
                         android:textColor="@color/text_light_color" />
 
                     <Switch
@@ -200,7 +200,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Auto Connect"
+                        android:text="@string/settings_auto_connect"
                         android:textColor="@color/text_light_color" />
 
                     <Switch
@@ -246,7 +246,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Server Address"
+                        android:text="@string/settings_server_address"
                         android:textColor="@color/text_light_color" />
 
                     <ImageButton
@@ -255,6 +255,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
+                        android:contentDescription="@string/content_description"
                         android:src="@drawable/next_arrow"
                         android:tint="@color/text_light_color" />
 
@@ -280,7 +281,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Text Size"
+                        android:text="@string/settings_text_size"
                         android:textColor="@color/text_light_color" />
 
                     <ImageButton
@@ -288,6 +289,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
+                        android:contentDescription="@string/content_description"
                         android:src="@drawable/next_arrow"
                         android:tint="@color/text_light_color" />
 
@@ -313,7 +315,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Privacy"
+                        android:text="@string/settings_privacy"
                         android:textColor="@color/text_light_color" />
 
                     <ImageButton
@@ -322,7 +324,8 @@
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
                         android:src="@drawable/next_arrow"
-                        android:tint="@color/text_light_color" />
+                        android:tint="@color/text_light_color"
+                        android:contentDescription="@string/content_description"/>
 
                 </LinearLayout>
             </LinearLayout>

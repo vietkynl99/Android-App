@@ -28,4 +28,11 @@
     <string name="time_sample">8:00 AM</string>
     <string name="number_0">0</string>
     <string name="lamp">Lamp</string>
+    <string name="sample_username">Viet Kynl</string>
+    <string name="sample_email">vietkynl@gmail.com</string>
+    <string name="settings_weather_forecast">Weather forecast</string>
+    <string name="settings_auto_connect">Auto Connect</string>
+    <string name="settings_server_address">Server Address</string>
+    <string name="settings_text_size">Text Size</string>
+    <string name="settings_privacy">Privacy</string>
 </resources>
