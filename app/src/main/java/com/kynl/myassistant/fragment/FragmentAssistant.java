@@ -41,6 +41,7 @@ import static com.kynl.myassistant.common.CommonUtils.SOCKET_GET_MESSAGE_FROM_SE
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_SEND_MESS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_STATUS;
+import static com.kynl.myassistant.common.CommonUtils.UI_EXIT_BUBBLE_CHAT;
 
 public class FragmentAssistant extends Fragment {
 
@@ -187,6 +188,15 @@ public class FragmentAssistant extends Fragment {
             @Override
             public void onClick(View v) {
                 exitAdvanceMenu();
+            }
+        });
+
+        // exit
+        ImageButton backToMainUIButton = view.findViewById(R.id.backToMainUIButton);
+        backToMainUIButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendBackToMainUIRequest();
             }
         });
 
@@ -372,6 +382,12 @@ public class FragmentAssistant extends Fragment {
                 messageEditText.clearFocus();
             }
         }
+    }
+
+    private void sendBackToMainUIRequest() {
+        Intent intent = new Intent(BROADCAST_ACTION);
+        intent.putExtra("event", UI_EXIT_BUBBLE_CHAT);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     private void requestSocketStatusFromService() {

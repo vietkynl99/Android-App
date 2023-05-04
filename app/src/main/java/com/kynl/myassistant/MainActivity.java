@@ -42,6 +42,7 @@ import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_REQ_STATUS;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_STATUS;
+import static com.kynl.myassistant.common.CommonUtils.UI_EXIT_BUBBLE_CHAT;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver mBroadcastReceiver;
 
     private ViewGroup serverWarningPanel;
+    private ViewGroup bubbleChatLayout;
 
     private List<MenuElement> menuElementList;
     private List<Integer> menuElementIconIdList;
@@ -105,13 +107,13 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(0);
 
         // Bubble chat
-        FrameLayout bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
+        bubbleChatLayout = findViewById(R.id.bubbleChatLayout);
         CardView assistantIconView = findViewById(R.id.assistantIconView);
         assistantIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
-                bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                toggleBubbleChatVisibility();
             }
         });
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 String event = intent.getStringExtra("event");
                 if (event != null) {
                     switch (event) {
-                        case SOCKET_STATUS:
+                        case SOCKET_STATUS: {
                             int status = intent.getIntExtra("status", -1);
                             if (status >= 0) {
                                 Log.e(TAG, "onReceive: get socket status=" + status);
@@ -168,6 +170,16 @@ public class MainActivity extends AppCompatActivity {
                                 });
                             }
                             break;
+                        }
+                        case UI_EXIT_BUBBLE_CHAT: {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setBubbleChatVisibility(false);
+                                }
+                            });
+                            break;
+                        }
                         default:
                             break;
                     }
@@ -197,6 +209,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
         super.onPause();
+    }
+
+    private void setBubbleChatVisibility(boolean visibility) {
+        if (bubbleChatLayout != null) {
+            bubbleChatLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void toggleBubbleChatVisibility() {
+        if (bubbleChatLayout != null) {
+            bubbleChatLayout.setVisibility(bubbleChatLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        }
     }
 
     private void requestSocketStatusFromService() {
