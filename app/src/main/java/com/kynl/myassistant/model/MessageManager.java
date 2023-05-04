@@ -1,10 +1,5 @@
 package com.kynl.myassistant.model;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.kynl.myassistant.adapter.MessageDataAdapter;
-import com.kynl.myassistant.database.DatabaseHelper;
 import com.kynl.myassistant.database.DatabaseManager;
 
 import java.util.ArrayList;
@@ -12,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 public class MessageManager {
-    private final String TAG = getClass().getName();
     private static MessageManager instance;
     private List<MessageData> messageDataList;
     private List<String> suggestionDataList;
@@ -78,8 +72,7 @@ public class MessageManager {
 
     public int deleteSelectedItem() {
         int count = 0;
-        int position = 0;
-        for (position = messageDataList.size() - 1; position >= 0; position--) {
+        for (int position = messageDataList.size() - 1; position >= 0; position--) {
             if (messageDataList.get(position).isSelected()) {
                 count++;
                 deleteMessage(position);
