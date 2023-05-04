@@ -63,7 +63,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fitbot_ek1_string"
+                    android:text="@string/chat_bot_name"
                     android:textColor="@color/text_dark_color"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -250,7 +250,7 @@
                 android:ems="10"
                 android:fontFamily="DM Sans"
                 android:gravity="start|top"
-                android:hint="@string/type_a_message____string"
+                android:hint="@string/type_a_message"
                 android:inputType="textMultiLine"
                 android:textSize="14sp" />
 
