@@ -3,24 +3,17 @@ package com.kynl.myassistant.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kynl.myassistant.R;
-import com.kynl.myassistant.model.MessageData;
 
-import java.util.Date;
 import java.util.List;
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.CustomViewHolder> {
-    private final String TAG = "MenuRecyclerViewAdapter";
-    private List<Integer> menuIconList;
+    private final List<Integer> menuIconList;
     private int selectedItemPosition;
     private OnSubItemClickListener onSubItemClickListener;
 
@@ -33,19 +26,16 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_recycler_view_item, parent, false);
-        return new CustomViewHolder(view, onSubItemClickListener);
+        return new CustomViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         holder.bind(menuIconList.get(position), position == selectedItemPosition);
-        holder.menuIconLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // not use text
-                if (onSubItemClickListener != null) {
-                    onSubItemClickListener.onSubItemClick(position, "");
-                }
+        holder.menuIconLayout.setOnClickListener(v -> {
+            // not use text
+            if (onSubItemClickListener != null) {
+                onSubItemClickListener.onSubItemClick(position, "");
             }
         });
     }
@@ -71,15 +61,13 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         }
     }
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
-        private OnSubItemClickListener onSubItemClickListener;
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
         ImageView menuIcon;
         ViewGroup menuIconLayout;
         View dotHighlight;
 
-        public CustomViewHolder(@NonNull View itemView, OnSubItemClickListener onSubItemClickListener) {
+        public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.onSubItemClickListener = onSubItemClickListener;
             menuIcon = itemView.findViewById(R.id.menuIcon);
             menuIconLayout = itemView.findViewById(R.id.menuIconLayout);
             dotHighlight = itemView.findViewById(R.id.dotHighlight);
