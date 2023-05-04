@@ -4,31 +4,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
-
-import com.kynl.myassistant.service.SocketService;
-
-import java.util.Set;
 
 import static com.kynl.myassistant.common.CommonUtils.BROADCAST_ACTION;
 import static com.kynl.myassistant.common.CommonUtils.SOCKET_PREFERENCES;
@@ -48,33 +33,24 @@ public class Settings extends AppCompatActivity {
 
         // back button
         ImageButton backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close the current activity and return to the previous activity
-                finish();
-            }
+        backButton.setOnClickListener(v -> {
+            // Close the current activity and return to the previous activity
+            finish();
         });
 
         // server address
         LinearLayout serverAddressLayout = findViewById(R.id.serverAddressLayout);
-        serverAddressLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                readOldSetting();
-                showDialog("Server address", "");
-            }
+        serverAddressLayout.setOnClickListener(v -> {
+            readOldSetting();
+            showDialog();
         });
 
         // Weather forecast
         Switch weatherForecastSwitch = findViewById(R.id.weatherForecastSwitch);
         weatherForecastSwitch.setChecked(weatherForecastEnable);
-        weatherForecastSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                weatherForecastEnable = isChecked;
-                saveOldSetting();
-            }
+        weatherForecastSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            weatherForecastEnable = isChecked;
+            saveOldSetting();
         });
     }
 
@@ -101,7 +77,7 @@ public class Settings extends AppCompatActivity {
         editor.apply();
     }
 
-    private void showDialog(String title, String message) {
+    private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
 
         final EditText editText = new EditText(getApplicationContext());
@@ -114,33 +90,20 @@ public class Settings extends AppCompatActivity {
 
         builder.setView(editText);
 
-        if (title != null) {
-            builder.setTitle(title);
-        }
-        if (message != null) {
-            builder.setMessage(message);
-        }
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            builder.setTitle("Server address");
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String text = editText.getText().toString().trim();
+            Log.e(TAG, "onClick: text" + text);
+            if (!text.isEmpty()) {
+                serverAddress = text;
+                saveOldSetting();
+                Intent intent = new Intent(BROADCAST_ACTION);
+                intent.putExtra("event", SOCKET_REQ_CHANGE_ADDRESS);
+                intent.putExtra("address", text);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
-        });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String text = editText.getText().toString().trim();
-                Log.e(TAG, "onClick: text" + text);
-                if (!text.isEmpty()) {
-                    serverAddress = text;
-                    saveOldSetting();
-                    Intent intent = new Intent(BROADCAST_ACTION);
-                    intent.putExtra("event", SOCKET_REQ_CHANGE_ADDRESS);
-                    intent.putExtra("address", text);
-                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-                }
-                dialog.cancel();
-            }
+            dialog.cancel();
         });
 
         builder.create().show();
